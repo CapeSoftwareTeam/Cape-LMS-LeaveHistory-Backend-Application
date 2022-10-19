@@ -1,4 +1,4 @@
-package com.capeelectric.Controller;
+package com.capeelectric.controller;
 
 import java.util.List;
 

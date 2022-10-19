@@ -27,6 +27,9 @@ public class History {
 	@Column(name="DEPARTMENT")
 	private String department;
 	
+	@Column(name="EXPERIENCE")
+	private Integer experience;
+	
 	@Column(name="CREATED_DATE")
 	private Date createddate;
 	
@@ -51,11 +54,29 @@ public class History {
 	@Column(name="LOP_DAYS")
 	private Integer lopdays;
 	
+	@Column(name="CASUAL_LEAVE")
+	private Integer casualLeave;
+	
+	@Column(name="SICK_LEAVE")
+	private Integer sickLeave;
+	
+	@Column(name="PRIVILEGE_LEAVE")
+	private Integer privilegeLeave;
+	
+	@Column(name="BEREAVEMENT_LEAVE")
+	private Integer bereavementLeave;
+	
+	@Column(name="MATERNITY_LEAVE")
+	private Integer maternityLeave;
+	
 	@Column(name="CREATED_BY")
 	private Date createdby;
 	
 	@Column(name="APPROVED_DATE")
 	private Date approveddate ;
+	
+	@Column(name="APPROVED_BY")
+	private String approvedby;
 
 	public Integer getHistoryid() {
 		return historyid;
@@ -175,6 +196,63 @@ public class History {
 
 	public void setApproveddate(Date approveddate) {
 		this.approveddate = approveddate;
+	}
+
+	public Integer getExperience() {
+		return experience;
+	}
+
+	public void setExperience(Integer experience) {
+		this.experience = experience;
+	}
+
+	public Integer getCasualLeave() {
+		return casualLeave;
+	}
+
+	public void setCasualLeave(Integer casualLeave) {
+		this.casualLeave = casualLeave;
+	}
+
+	public Integer getSickLeave() {
+		return sickLeave;
+	}
+
+	public void setSickLeave(Integer sickLeave) {
+		this.sickLeave = sickLeave;
+	}
+
+	public Integer getPrivilegeLeave() {
+		return privilegeLeave;
+	}
+
+	public void setPrivilegeLeave(Integer privilegeLeave) {
+		this.privilegeLeave = privilegeLeave;
+	}
+
+	public Integer getBereavementLeave() {
+		return bereavementLeave;
+	}
+
+	public void setBereavementLeave(Integer bereavementLeave) {
+		this.bereavementLeave = bereavementLeave;
+	}
+
+
+	public Integer getMaternityLeave() {
+		return maternityLeave;
+	}
+
+	public void setMaternityLeave(Integer maternityLeave) {
+		this.maternityLeave = maternityLeave;
+	}
+
+	public String getApprovedby() {
+		return approvedby;
+	}
+
+	public void setApprovedby(String approvedby) {
+		this.approvedby = approvedby;
 	}
 
 
