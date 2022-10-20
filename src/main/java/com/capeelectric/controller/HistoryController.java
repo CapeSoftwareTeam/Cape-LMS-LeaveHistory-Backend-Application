@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,15 +29,15 @@ public class HistoryController {
 		return new ResponseEntity<String>("History details added successfully" ,HttpStatus.CREATED );
 	}
 	@PutMapping("/history1") 
-	public ResponseEntity<String> updateHistoryDetails(@RequestBody History history){
+	public ResponseEntity<String> putHistoryDetails(@RequestBody History history){
 		historyService.updateHistoryDetails(history);
-		return new ResponseEntity<String>("History details updated",HttpStatus.ALREADY_REPORTED);
+		return new ResponseEntity<String>("History details updated",HttpStatus.OK);
 		
 	}
 	@GetMapping("/history2")
-	public ResponseEntity<List<History>> getHistoryDetails(){
+	public ResponseEntity<List<History>> retrive(){
 		 
-		return new ResponseEntity<List<History>>(historyService.getHistoryDetails(),HttpStatus.CONTINUE);
+		return new ResponseEntity<List<History>>(historyService.getHistoryDetails(),HttpStatus.OK);
 		
 	}
 	

@@ -9,13 +9,15 @@ import com.capeelectric.model.History;
 @Service
 public interface HistoryService {
 
-	void addHistoryDetails(History history);
+	public void addHistoryDetails(History history);
 
-	void updateHistoryDetails(History history);
+	
 
-	List<History> getHistoryDetails();
+	public List<History> getHistoryDetails();
 
-	void deleteHistoryDetails(List<History> history);
+	public void deleteHistoryDetails(List<History> history);
+
+	public void updateHistoryDetails(History history);
 	
 
 }

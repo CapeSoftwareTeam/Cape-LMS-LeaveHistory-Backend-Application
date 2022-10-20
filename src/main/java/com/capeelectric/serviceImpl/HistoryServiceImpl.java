@@ -1,10 +1,13 @@
 package com.capeelectric.serviceImpl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import com.capeelectric.model.History;
 import com.capeelectric.model.LeaveDetails;
@@ -32,10 +35,13 @@ public class HistoryServiceImpl implements HistoryService {
         Optional<RegisterDetails> registerDetails = registerDetailsRepository.findByEmpid(history.getEmpid());
 		if (registerDetails.isPresent() && null != registerDetails.get() && null != history.getEmpid()
 				&& registerDetails.get().getEmpid().equals(history.getEmpid())) {
+			history.setRegisterid(registerDetails.get().getRegisterid());
 			history.setLocation(registerDetails.get().getOfficelocation());
 			history.setName(registerDetails.get().getName());
 			history.setExperience(registerDetails.get().getTotalexperience());
 			history.setDepartment(registerDetails.get().getDepartment());
+			history.setCreatedby(history.getCreatedby());
+			history.setCreateddate(LocalDateTime.now());
 			historyRepository.save(history);
 		}
 		
@@ -54,13 +60,43 @@ public class HistoryServiceImpl implements HistoryService {
 	@Override
 	public void updateHistoryDetails(History history) {
 		// TODO Auto-generated method stub
+		Optional<History> histotyRepo = historyRepository.findById(history.getHistoryid());			
+		if(histotyRepo.isPresent() && histotyRepo !=null){
+			System.out.println("html save start - - --");
+		History historyDetails  = histotyRepo.get();
+		historyDetails.setStatus(history.getStatus());
+		historyDetails.setApproveddate(LocalDateTime.now());
+//		
+		historyRepository.save(historyDetails);
+		if(histotyRepo.get().getLeavetype().equalsIgnoreCase("casualleave")) {
+			System.out.println("crt.........................");
+				int lop=histotyRepo.get().getCasualLeave()-histotyRepo.get().getNoofdays();
+				
+				if(lop>=0) {
+				
+					historyDetails.setCasualLeave(lop);
+					historyRepository.save(historyDetails);
+					
+				}
+				else {
+//					historyDetails.setCasualLeave(0);
+					historyDetails.setLopdays(lop);
+					historyRepository.save(historyDetails);
+		
+				}
+		
+		}
+		
+	
+		}
 		
 	}
 
 	@Override
 	public List<History> getHistoryDetails() {
-		// TODO Auto-generated method stub
-		return null;
+		return (List<History>)historyRepository.findAll();
+		
+		
 	}
 
 	@Override

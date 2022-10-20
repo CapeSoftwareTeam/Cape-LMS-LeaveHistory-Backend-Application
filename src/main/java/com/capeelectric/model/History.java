@@ -1,5 +1,6 @@
 package com.capeelectric.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -21,17 +22,20 @@ public class History {
 	@Column(name="EMP_ID")
 	private String empid;
 	
+	@Column(name="EXPERIENCE")
+	private Integer experience;
+	
 	@Column(name="NAME")
 	private String name;
 	
 	@Column(name="DEPARTMENT")
 	private String department;
 	
-	@Column(name="EXPERIENCE")
-	private Integer experience;
-	
 	@Column(name="CREATED_DATE")
-	private Date createddate;
+	private LocalDateTime createddate;
+	
+	@Column(name="LEAVE_TYPE")
+	private String leavetype;
 	
 	@Column(name="REASON_FOR_APPLY")
 	private String reasonforapply;
@@ -54,11 +58,21 @@ public class History {
 	@Column(name="LOP_DAYS")
 	private Integer lopdays;
 	
+	@Column(name="CREATED_BY")
+	private String createdby;
+	
+	@Column(name="APPROVED_DATE")
+	private LocalDateTime approveddate ;
+	
 	@Column(name="CASUAL_LEAVE")
-	private Integer casualLeave;
+    private Integer casualLeave;
 	
 	@Column(name="SICK_LEAVE")
 	private Integer sickLeave;
+	
+	@Column(name="APPROVED_BY")
+	private String approvedBy;
+	
 	
 	@Column(name="PRIVILEGE_LEAVE")
 	private Integer privilegeLeave;
@@ -68,15 +82,6 @@ public class History {
 	
 	@Column(name="MATERNITY_LEAVE")
 	private Integer maternityLeave;
-	
-	@Column(name="CREATED_BY")
-	private Date createdby;
-	
-	@Column(name="APPROVED_DATE")
-	private Date approveddate ;
-	
-	@Column(name="APPROVED_BY")
-	private String approvedby;
 
 	public Integer getHistoryid() {
 		return historyid;
@@ -118,11 +123,11 @@ public class History {
 		this.department = department;
 	}
 
-	public Date getCreateddate() {
+	public LocalDateTime getCreateddate() {
 		return createddate;
 	}
 
-	public void setCreateddate(Date createddate) {
+	public void setCreateddate(LocalDateTime createddate) {
 		this.createddate = createddate;
 	}
 
@@ -182,20 +187,20 @@ public class History {
 		this.lopdays = lopdays;
 	}
 
-	public Date getCreatedby() {
+	public String getCreatedby() {
 		return createdby;
 	}
 
-	public void setCreatedby(Date createdby) {
+	public void setCreatedby(String createdby) {
 		this.createdby = createdby;
 	}
 
-	public Date getApproveddate() {
+	public LocalDateTime getApproveddate() {
 		return approveddate;
 	}
 
-	public void setApproveddate(Date approveddate) {
-		this.approveddate = approveddate;
+	public void setApproveddate(LocalDateTime localDateTime) {
+		this.approveddate = localDateTime;
 	}
 
 	public Integer getExperience() {
@@ -238,7 +243,6 @@ public class History {
 		this.bereavementLeave = bereavementLeave;
 	}
 
-
 	public Integer getMaternityLeave() {
 		return maternityLeave;
 	}
@@ -247,13 +251,23 @@ public class History {
 		this.maternityLeave = maternityLeave;
 	}
 
-	public String getApprovedby() {
-		return approvedby;
+	public String getLeavetype() {
+		return leavetype;
 	}
 
-	public void setApprovedby(String approvedby) {
-		this.approvedby = approvedby;
+	public void setLeavetype(String leavetype) {
+		this.leavetype = leavetype;
 	}
+
+	public String getApprovedBy() {
+		return approvedBy;
+	}
+
+	public void setApprovedBy(String approvedBy) {
+		this.approvedBy = approvedBy;
+	}
+
+	
 
 
 }
