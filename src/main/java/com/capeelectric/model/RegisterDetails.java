@@ -1,6 +1,7 @@
 package com.capeelectric.model;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -60,13 +61,13 @@ public class RegisterDetails {
 	   private String officelocation;
 	   
 	   @Column(name="CREATED_DATE")
-	   private Integer createddate;
+	   private LocalDateTime createddate;
 	   
 	   @Column(name="CREATED_BY")
 	   private String createdby;
 	   
 	   @Column(name="UPDATED_DATE")
-	   private Integer updateddate;
+	   private LocalDateTime updateddate;
 	   
 	   @Column(name="UPDATED_BY")
 	   private String updatedby;
@@ -206,11 +207,11 @@ public class RegisterDetails {
 		this.status = status;
 	}
 
-	public Integer getCreateddate() {
+	public LocalDateTime getCreateddate() {
 		return createddate;
 	}
 
-	public void setCreateddate(Integer createddate) {
+	public void setCreateddate(LocalDateTime createddate) {
 		this.createddate = createddate;
 	}
 
@@ -222,11 +223,11 @@ public class RegisterDetails {
 		this.createdby = createdby;
 	}
 
-	public Integer getUpdateddate() {
+	public LocalDateTime getUpdateddate() {
 		return updateddate;
 	}
 
-	public void setUpdateddate(Integer updateddate) {
+	public void setUpdateddate(LocalDateTime updateddate) {
 		this.updateddate = updateddate;
 	}
 

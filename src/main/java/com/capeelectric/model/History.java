@@ -5,14 +5,18 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="history_table")
 public class History {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="HISTORY_ID")
 	private Integer historyid;
 	
@@ -35,7 +39,8 @@ public class History {
 	private LocalDateTime createddate;
 	
 	@Column(name="LEAVE_TYPE")
-	private String leavetype;
+	private String leaveType;
+
 	
 	@Column(name="REASON_FOR_APPLY")
 	private String reasonforapply;
@@ -46,7 +51,7 @@ public class History {
 	@Column(name="TO_DATE")
 	private Date todate;
 	
-	@Column(name="NO_OF_DAYS")
+	@Column(name="N0_OF_DAYS")
 	private Integer noofdays;
 	
 	@Column(name="LOCATION")
@@ -72,8 +77,7 @@ public class History {
 	
 	@Column(name="APPROVED_BY")
 	private String approvedBy;
-	
-	
+
 	@Column(name="PRIVILEGE_LEAVE")
 	private Integer privilegeLeave;
 	
@@ -82,6 +86,12 @@ public class History {
 	
 	@Column(name="MATERNITY_LEAVE")
 	private Integer maternityLeave;
+
+	@Column(name="APPROVED_BY")
+	private String approvedby;
+	
+	@Transient
+	private LeaveTrack leaveTrack;
 
 	public Integer getHistoryid() {
 		return historyid;
@@ -107,6 +117,14 @@ public class History {
 		this.empid = empid;
 	}
 
+	public Integer getExperience() {
+		return experience;
+	}
+
+	public void setExperience(Integer experience) {
+		this.experience = experience;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -129,6 +147,14 @@ public class History {
 
 	public void setCreateddate(LocalDateTime createddate) {
 		this.createddate = createddate;
+	}
+
+	public String getLeaveType() {
+		return leaveType;
+	}
+
+	public void setLeaveType(String leaveType) {
+		this.leaveType = leaveType;
 	}
 
 	public String getReasonforapply() {
@@ -199,16 +225,8 @@ public class History {
 		return approveddate;
 	}
 
-	public void setApproveddate(LocalDateTime localDateTime) {
-		this.approveddate = localDateTime;
-	}
-
-	public Integer getExperience() {
-		return experience;
-	}
-
-	public void setExperience(Integer experience) {
-		this.experience = experience;
+	public void setApproveddate(LocalDateTime approveddate) {
+		this.approveddate = approveddate;
 	}
 
 	public Integer getCasualLeave() {
@@ -225,6 +243,14 @@ public class History {
 
 	public void setSickLeave(Integer sickLeave) {
 		this.sickLeave = sickLeave;
+	}
+
+	public String getApprovedBy() {
+		return approvedBy;
+	}
+
+	public void setApprovedBy(String approvedBy) {
+		this.approvedBy = approvedBy;
 	}
 
 	public Integer getPrivilegeLeave() {
@@ -251,23 +277,20 @@ public class History {
 		this.maternityLeave = maternityLeave;
 	}
 
-	public String getLeavetype() {
-		return leavetype;
+	public String getApprovedby() {
+		return approvedby;
 	}
 
-	public void setLeavetype(String leavetype) {
-		this.leavetype = leavetype;
+	public void setApprovedby(String approvedby) {
+		this.approvedby = approvedby;
 	}
 
-	public String getApprovedBy() {
-		return approvedBy;
+	public LeaveTrack getLeaveTrack() {
+		return leaveTrack;
 	}
 
-	public void setApprovedBy(String approvedBy) {
-		this.approvedBy = approvedBy;
+	public void setLeaveTrack(LeaveTrack leaveTrack) {
+		this.leaveTrack = leaveTrack;
 	}
-
-	
-
-
 }
+	
