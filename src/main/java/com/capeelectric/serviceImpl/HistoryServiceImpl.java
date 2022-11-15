@@ -294,7 +294,7 @@ public class HistoryServiceImpl implements HistoryService {
 	       
 	        System.out.println("object created");
 	        historyDetails.setStatus(status);
-	        historyDetails.setApprovedby(historyDetails.getName());
+	        historyDetails.setApprovedBy(historyDetails.getName());
 //	        historyDetails.setApproveddate(LocalDateTime.now());    
 	       // historyRepository.save(historyDetails);
 	        System.out.println("saved successfully");
@@ -413,7 +413,7 @@ public List<History> getHistoryDetails() {
 @Override
 public List<History> getHistoryDetails(String empid) {
 	// TODO Auto-generated method stub
-	return null;
+	return (List<History>) historyRepository.findAll() ;
 }
 
 @Override

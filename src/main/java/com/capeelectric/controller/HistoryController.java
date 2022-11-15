@@ -1,6 +1,7 @@
 package com.capeelectric.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.capeelectric.model.History;
 import com.capeelectric.model.LeaveTrack;
+import com.capeelectric.model.RegisterDetails;
 import com.capeelectric.service.HistoryService;
+import com.capeelectric.service.RegisterService;
 import com.capeelectric.serviceImpl.HistoryServiceImpl;
 @RestController
 @RequestMapping("/api/v1")
@@ -27,6 +30,9 @@ public class HistoryController {
 	
 	@Autowired
 	private HistoryService historyService;
+	
+	@Autowired
+	private RegisterService registerService;
 	
 	
 	@PostMapping("/history")
@@ -68,5 +74,9 @@ public class HistoryController {
 	public LeaveTrack getLeavedetails(@PathVariable String empId){
 		return historyService.getLeavedetails(empId);
 	}
+	@GetMapping("/getMemberdetails/{empid}")
+	public ResponseEntity<Optional<RegisterDetails>> memberDetails(@PathVariable String empid){
+		return new ResponseEntity<Optional<RegisterDetails>> (registerService.memberDetails(empid), HttpStatus.OK);
 
+	}	
 }

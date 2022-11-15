@@ -40,7 +40,6 @@ public class History {
 	
 	@Column(name="LEAVE_TYPE")
 	private String leaveType;
-
 	
 	@Column(name="REASON_FOR_APPLY")
 	private String reasonforapply;
@@ -87,8 +86,7 @@ public class History {
 	@Column(name="MATERNITY_LEAVE")
 	private Integer maternityLeave;
 
-	@Column(name="APPROVED_BY")
-	private String approvedby;
+	
 	
 	@Transient
 	private LeaveTrack leaveTrack;
@@ -277,14 +275,7 @@ public class History {
 		this.maternityLeave = maternityLeave;
 	}
 
-	public String getApprovedby() {
-		return approvedby;
-	}
-
-	public void setApprovedby(String approvedby) {
-		this.approvedby = approvedby;
-	}
-
+	
 	public LeaveTrack getLeaveTrack() {
 		return leaveTrack;
 	}
