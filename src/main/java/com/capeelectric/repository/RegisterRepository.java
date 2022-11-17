@@ -13,4 +13,8 @@ public interface RegisterRepository extends CrudRepository<RegisterDetails,Integ
 
   public Optional<RegisterDetails> findByEmpid(String empid);
 
+public Optional<RegisterDetails> findByEmailid(String username);
+
+public Optional<RegisterDetails> findByMobilenumber(String mobileNumber);
+
 }
