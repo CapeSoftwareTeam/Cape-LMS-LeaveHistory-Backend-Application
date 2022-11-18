@@ -21,7 +21,6 @@ import com.capeelectric.model.LeaveTrack;
 import com.capeelectric.model.RegisterDetails;
 import com.capeelectric.service.HistoryService;
 import com.capeelectric.service.RegisterService;
-import com.capeelectric.serviceImpl.HistoryServiceImpl;
 @RestController
 @RequestMapping("/api/v1")
 @CrossOrigin("http://localhost:4200")
@@ -40,6 +39,12 @@ public class HistoryController {
 		historyService.addHistoryDetails(history);
 		return new ResponseEntity<String>("History details added successfully" ,HttpStatus.CREATED);
 	}
+	@GetMapping("/getHistory")
+	public ResponseEntity<String> getHistorylist(@RequestBody History history){
+		historyService.getHistorylist();
+		return new ResponseEntity<String>("History details get successfully" ,HttpStatus.CREATED);
+	}
+	
 //	@PutMapping("/history1") 
 //	public ResponseEntity<String> updateHistoryDetails(@RequestBody History history){
 //		historyService.updateHistoryDetails(history);
@@ -78,5 +83,17 @@ public class HistoryController {
 	public ResponseEntity<Optional<RegisterDetails>> memberDetails(@PathVariable String empid){
 		return new ResponseEntity<Optional<RegisterDetails>> (registerService.memberDetails(empid), HttpStatus.OK);
 
+	}	
+	
+	@GetMapping("/getHistoryBasedOnUser/{empid}")
+	public ResponseEntity<List<History>> getHistoryBasedOnUser(@PathVariable String empid){
+		return new ResponseEntity<List<History>> (historyService.getHistoryBasedOnUser(empid), HttpStatus.OK);
+		
+	}	
+	
+	@GetMapping("/getHistoryBasedOnRole/{role}")
+	public ResponseEntity<List<History>> getHistoryBasedOnRole(@PathVariable String role){
+		return new ResponseEntity<List<History>> (historyService.getHistoryBasedOnRole(role), HttpStatus.OK);
+		
 	}	
 }

@@ -1,6 +1,5 @@
 package com.capeelectric.serviceImpl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,9 @@ public class RegisterServiceImpl implements RegisterService {
 
 		@Override
 		public Optional<RegisterDetails> memberDetails(String empid) {
-		
+
 			return (Optional<RegisterDetails>) registerRepo.findByEmpid(empid);
-			}
+		}
 
 	}
 

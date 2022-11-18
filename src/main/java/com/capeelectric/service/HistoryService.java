@@ -6,13 +6,12 @@ import org.springframework.stereotype.Service;
 
 import com.capeelectric.model.History;
 import com.capeelectric.model.LeaveTrack;
+import com.capeelectric.model.RegisterDetails;
 
 @Service
 public interface HistoryService {
 
 	public void addHistoryDetails(History history);
-
-	
 
 	public List<History> getHistoryDetails();
 
@@ -24,9 +23,14 @@ public interface HistoryService {
 
 	History postdetails(String empid);
 
-	public void updateApprove(Integer historyId,String status);
+	public void updateApprove(Integer historyId, String status);
 
 	public LeaveTrack getLeavedetails(String empid);
-	
+
+	public List<History> getHistorylist();
+
+	public List<History> getHistoryBasedOnUser(String empid);
+
+	public List<History> getHistoryBasedOnRole(String role);
 
 }

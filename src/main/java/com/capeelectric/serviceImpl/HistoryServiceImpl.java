@@ -2,6 +2,7 @@ package com.capeelectric.serviceImpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -426,9 +427,24 @@ public List<History> setHistoryDetails(String empid) {
 public History postdetails(String empid) {
 	// TODO Auto-generated method stub
 	return null;
-}}
+}
+@Override
+public List<History> getHistorylist() {
+	// TODO Auto-generated method stub
+	return (List<History>) historyRepository.findAll() ;
+}
 
+@Override
+public List<History> getHistoryBasedOnUser(String empid) {
+	return  historyRepository.findByEmpid(empid);		
+}
 
+@Override
+public List<History> getHistoryBasedOnRole(String role) {
+ 	return  historyRepository.findByDepartment(role);		
+}
+
+}
 	
 //	//
 //	public History getEmployeeLeaveDetails(String empId) {
