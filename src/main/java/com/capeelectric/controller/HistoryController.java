@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capeelectric.model.History;
+import com.capeelectric.model.LeaveDetails;
 import com.capeelectric.model.LeaveTrack;
 import com.capeelectric.model.RegisterDetails;
 import com.capeelectric.service.HistoryService;
@@ -96,4 +97,8 @@ public class HistoryController {
 		return new ResponseEntity<List<History>> (historyService.getHistoryBasedOnRole(role), HttpStatus.OK);
 		
 	}	
+	@GetMapping("/leaveDetails/{empid}")
+		public ResponseEntity<Optional<LeaveDetails>> leavedetails(@PathVariable String empid){
+		return new ResponseEntity<Optional<LeaveDetails>>(historyService.leavedetails(empid),HttpStatus.OK);
+		}
 }

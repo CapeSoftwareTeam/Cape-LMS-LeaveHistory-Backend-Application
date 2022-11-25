@@ -11,7 +11,7 @@ public class LeaveDetails {
 	
 	@Id
 	@Column(name="L_ID")
-	private Integer l_Id;
+	private Integer lId;
 	
 	@Column(name="EXPERIENCE")
 	private Integer experience;
@@ -79,13 +79,15 @@ public class LeaveDetails {
 		this.maternityLeave = maternityLeave;
 	}
 
-	public Integer getL_Id() {
-		return l_Id;
+	public Integer getlId() {
+		return lId;
 	}
 
-	public void setL_Id(Integer l_Id) {
-		this.l_Id = l_Id;
+	public void setlId(Integer lId) {
+		this.lId = lId;
 	}
+
+
 
 	
 

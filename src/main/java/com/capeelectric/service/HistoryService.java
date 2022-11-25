@@ -1,10 +1,12 @@
 package com.capeelectric.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.capeelectric.model.History;
+import com.capeelectric.model.LeaveDetails;
 import com.capeelectric.model.LeaveTrack;
 import com.capeelectric.model.RegisterDetails;
 
@@ -32,5 +34,8 @@ public interface HistoryService {
 	public List<History> getHistoryBasedOnUser(String empid);
 
 	public List<History> getHistoryBasedOnRole(String role);
+
+	public Optional<LeaveDetails> leavedetails(String empid);
+
 
 }

@@ -86,8 +86,28 @@ public class History {
 	@Column(name="MATERNITY_LEAVE")
 	private Integer maternityLeave;
 
+	@Column(name="DESIGNATION")
+	private String designation;
 	
+	@Column(name="MANAGER_NAME")
+	private String managerName;
 	
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
+	public String getManagerName() {
+		return managerName;
+	}
+
+	public void setManagerName(String managerName) {
+		this.managerName = managerName;
+	}
+
 	@Transient
 	private LeaveTrack leaveTrack;
 

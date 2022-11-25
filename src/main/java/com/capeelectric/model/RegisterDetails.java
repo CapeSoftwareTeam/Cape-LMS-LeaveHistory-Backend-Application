@@ -75,6 +75,50 @@ public class RegisterDetails {
 	   @Column(name="STATUS")
 	   private String status;
 
+	   @Column(name="STATE")
+	   private String state;
+	   
+	   @Column(name="CITY")
+	   private String city;
+	   
+	   @Column(name="MANAGER_NAME")
+	   private String managerName;
+	   
+	   @Column(name="MANAGER_EMAIL")
+	   private String managerEmail;
+	   
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getManagerName() {
+		return managerName;
+	}
+
+	public void setManagerName(String managerName) {
+		this.managerName = managerName;
+	}
+
+	public String getManagerEmail() {
+		return managerEmail;
+	}
+
+	public void setManagerEmail(String managerEmail) {
+		this.managerEmail = managerEmail;
+	}
+
 	public Integer getRegisterid() {
 		return registerid;
 	}

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import com.capeelectric.model.History;
@@ -405,11 +406,7 @@ public class HistoryServiceImpl implements HistoryService {
 //		    }}
 	        }}}
 
-@Override
-public List<History> getHistoryDetails() {
-	// TODO Auto-generated method stub
-	return null;
-}
+
 
 @Override
 public List<History> getHistoryDetails(String empid) {
@@ -444,7 +441,25 @@ public List<History> getHistoryBasedOnRole(String role) {
  	return  historyRepository.findByDepartment(role);		
 }
 
+@Override
+public List<History> getHistoryDetails() {
+	// TODO Auto-generated method stub
+	return null;
 }
+
+@Override
+public Optional<LeaveDetails> leavedetails(String empid) {
+	Optional<RegisterDetails> registerDetailsRepo = registerDetailsRepository.findByEmpid(empid);
+	Optional<LeaveDetails> leaveDetailsRepo = leaveDetailsRepository.findByExperience(registerDetailsRepo.get().getTotalexperience());
+	System.out.println("");
+if(registerDetailsRepo.get().getTotalexperience()==leaveDetailsRepo.get().getExperience()) {
+	Integer experience=registerDetailsRepo.get().getTotalexperience();
+	return (Optional<LeaveDetails>) leaveDetailsRepository.findByExperience(experience);
+}
+return null;
+}
+}
+
 	
 //	//
 //	public History getEmployeeLeaveDetails(String empId) {
