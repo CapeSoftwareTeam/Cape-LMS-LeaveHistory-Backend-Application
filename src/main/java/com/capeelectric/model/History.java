@@ -90,8 +90,30 @@ public class History {
 	private String designation;
 	
 	@Column(name="MANAGER_NAME")
-	private String managerName;
+	private String managername;
 	
+	@Column(name="MANAGER_EMAIL")
+	private String manageremail;
+
+	public String getManageremail() {
+		return manageremail;
+	}
+
+	public void setManageremail(String manageremail) {
+		this.manageremail = manageremail;
+	}
+
+	@Transient
+	private LeaveTrack leaveTrack;
+	
+	public String getManagername() {
+		return managername;
+	}
+
+	public void setManagername(String managername) {
+		this.managername = managername;
+	}
+
 	public String getDesignation() {
 		return designation;
 	}
@@ -99,17 +121,6 @@ public class History {
 	public void setDesignation(String designation) {
 		this.designation = designation;
 	}
-
-	public String getManagerName() {
-		return managerName;
-	}
-
-	public void setManagerName(String managerName) {
-		this.managerName = managerName;
-	}
-
-	@Transient
-	private LeaveTrack leaveTrack;
 
 	public Integer getHistoryid() {
 		return historyid;
@@ -219,8 +230,8 @@ public class History {
 		return status;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public String setStatus(String status) {
+		return this.status = status;
 	}
 
 	public Integer getLopdays() {

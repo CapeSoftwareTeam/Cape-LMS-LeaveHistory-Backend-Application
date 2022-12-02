@@ -52,13 +52,22 @@ public class HistoryController {
 //		return new ResponseEntity<String>("History details updated",HttpStatus.OK);	
 //	}
 //	@GetMapping("/history2")
-	@GetMapping("/history2/{empid}")
-	public ResponseEntity<List<History>> getHistoryDetails(@PathVariable String empid){
-		return new ResponseEntity<List<History>>(historyService.getHistoryDetails(empid),HttpStatus.OK);
+	@GetMapping("/history2")
+	public ResponseEntity<List<History>> getHistoryDetails(){
+		return new ResponseEntity<List<History>>(historyService.getHistoryDetails(),HttpStatus.OK);
 	}
 	@GetMapping("/history4/{empid}")
 	public ResponseEntity <History> postdetails(@PathVariable String empid){
 	    return new ResponseEntity<History>(historyService.postdetails(empid),HttpStatus.OK) ;	    
+	} 
+
+	@GetMapping("/matseparation/{empid}")
+	public ResponseEntity <List<History>> empStatusDetails(@PathVariable String empid){
+	    return new ResponseEntity<List<History>>(historyService.empStatusDetails(empid),HttpStatus.OK) ;	    
+	} 
+	@GetMapping("/matAprrovalseparation/{empid}")
+	public ResponseEntity<List<History>> StatusDetails(@PathVariable String empid){
+	    return new ResponseEntity<List<History>> (historyService.StatusDetails(empid),HttpStatus.OK) ;	    
 	} 
 
 	@DeleteMapping("/history3") 
@@ -68,9 +77,9 @@ public class HistoryController {
 	
 	}	
 	
-	@PutMapping("/hrapprove/{historyId}/{status}") 
-	public void updateHistoryDetails(@PathVariable Integer historyId,@PathVariable String status,@RequestBody History history){
-		historyService.updateApprove(historyId,status);
+	@PutMapping("/hrapprove/{historyId}/{empid}/{status}") 
+	public void updateHistoryDetails(@PathVariable Integer historyId,@PathVariable String status,@RequestBody History history,@PathVariable String empid){
+		historyService.updateApprove(historyId,empid,status);
 		
 		//return new ResponseEntity<void>("History details updated",HttpStatus.OK);	
 		//return new ResponseEntity<String>("History details updated",HttpStatus.OK);	
@@ -83,8 +92,9 @@ public class HistoryController {
 	@GetMapping("/getMemberdetails/{empid}")
 	public ResponseEntity<Optional<RegisterDetails>> memberDetails(@PathVariable String empid){
 		return new ResponseEntity<Optional<RegisterDetails>> (registerService.memberDetails(empid), HttpStatus.OK);
-
 	}	
+	
+
 	
 	@GetMapping("/getHistoryBasedOnUser/{empid}")
 	public ResponseEntity<List<History>> getHistoryBasedOnUser(@PathVariable String empid){

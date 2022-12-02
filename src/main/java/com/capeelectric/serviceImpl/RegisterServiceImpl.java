@@ -21,5 +21,5 @@ public class RegisterServiceImpl implements RegisterService {
 			return (Optional<RegisterDetails>) registerRepo.findByEmpid(empid);
 		}
 
-	}
-
+		
+}

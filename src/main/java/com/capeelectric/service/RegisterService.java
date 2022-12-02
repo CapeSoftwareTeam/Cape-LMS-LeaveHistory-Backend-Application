@@ -8,5 +8,9 @@ import com.capeelectric.model.RegisterDetails;
 public interface RegisterService {
 
 	public Optional<RegisterDetails> memberDetails(String empid);
+
+//	public Optional<RegisterDetails> teamDetails(String department, String officelocation);
+
+
 	
 }

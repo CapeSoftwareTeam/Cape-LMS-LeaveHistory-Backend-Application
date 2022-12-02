@@ -15,17 +15,17 @@ public interface HistoryService {
 
 	public void addHistoryDetails(History history);
 
-	public List<History> getHistoryDetails();
+//	public List<History> getHistoryDetails(String empid, String managername);
 
 	void deleteHistoryDetails(List<History> history);
 
-	List<History> getHistoryDetails(String empid);
+//	List<History> getHistoryDetails(String empid);
 
 	public List<History> setHistoryDetails(String empid);
 
 	History postdetails(String empid);
 
-	public void updateApprove(Integer historyId, String status);
+	public void updateApprove(Integer historyId,String empid, String status);
 
 	public LeaveTrack getLeavedetails(String empid);
 
@@ -36,6 +36,16 @@ public interface HistoryService {
 	public List<History> getHistoryBasedOnRole(String role);
 
 	public Optional<LeaveDetails> leavedetails(String empid);
+
+	public List<History> empStatusDetails(String empid);
+
+	public List<History> StatusDetails(String empid);
+
+	public List<History> getHistoryDetails();
+
+//	List<History> getHistoryDetails(String department);
+
+
 
 
 }

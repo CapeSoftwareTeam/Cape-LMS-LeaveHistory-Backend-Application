@@ -82,10 +82,10 @@ public class RegisterDetails {
 	   private String city;
 	   
 	   @Column(name="MANAGER_NAME")
-	   private String managerName;
+	   private String managername;
 	   
 	   @Column(name="MANAGER_EMAIL")
-	   private String managerEmail;
+	   private String manageremail;
 	   
 	public String getState() {
 		return state;
@@ -102,21 +102,21 @@ public class RegisterDetails {
 	public void setCity(String city) {
 		this.city = city;
 	}
-
-	public String getManagerName() {
-		return managerName;
+	
+	public String getManagername() {
+		return managername;
 	}
 
-	public void setManagerName(String managerName) {
-		this.managerName = managerName;
+	public void setManagername(String managername) {
+		this.managername = managername;
 	}
 
-	public String getManagerEmail() {
-		return managerEmail;
+	public String getManageremail() {
+		return manageremail;
 	}
 
-	public void setManagerEmail(String managerEmail) {
-		this.managerEmail = managerEmail;
+	public void setManageremail(String manageremail) {
+		this.manageremail = manageremail;
 	}
 
 	public Integer getRegisterid() {

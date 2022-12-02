@@ -17,4 +17,7 @@ public Optional<RegisterDetails> findByEmailid(String username);
 
 public Optional<RegisterDetails> findByMobilenumber(String mobileNumber);
 
+
+
+
 }
