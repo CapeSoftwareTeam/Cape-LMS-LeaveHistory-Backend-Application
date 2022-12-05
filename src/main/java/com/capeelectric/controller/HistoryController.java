@@ -36,7 +36,7 @@ public class HistoryController {
 	
 	
 	@PostMapping("/history")
-	public ResponseEntity<String> addHistoryDetails(@RequestBody History history){
+	public ResponseEntity<String> addHistoryDetails(@RequestBody History history)throws Exception{
 		historyService.addHistoryDetails(history);
 		return new ResponseEntity<String>("History details added successfully" ,HttpStatus.CREATED);
 	}
@@ -85,9 +85,9 @@ public class HistoryController {
 		//return new ResponseEntity<String>("History details updated",HttpStatus.OK);	
 	}
 	
-	@GetMapping("/getLeavedetails/{empId}") 
-	public LeaveTrack getLeavedetails(@PathVariable String empId){
-		return historyService.getLeavedetails(empId);
+	@GetMapping("/getLeavedetails/{empid}") 
+	public LeaveTrack getLeavedetails(@PathVariable String empid){
+		return historyService.getLeavedetails(empid);
 	}
 	@GetMapping("/getMemberdetails/{empid}")
 	public ResponseEntity<Optional<RegisterDetails>> memberDetails(@PathVariable String empid){

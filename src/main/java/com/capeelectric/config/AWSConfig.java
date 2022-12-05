@@ -10,9 +10,11 @@ public class AWSConfig {
 	
 	@Value("${aws.email.send}")
 	private String sendEmail;
+
 	
+//	leaveApplyEmail
 	@Value("${aws.email.send.comment}")
-	private String sendEmailForComments;
+	private String sendLeaveApply;
 	
 	@Value("${aws.email.send.admin}") 
 	private String sendEmailToAdmin;
@@ -51,18 +53,19 @@ public class AWSConfig {
 		this.sendEmail = sendEmail;
 	}
 
+	
 	/**
-	 * @return the sendEmailForComments
+	 * @return the sentEmailLeaveApply
 	 */
-	public String getSendEmailForComments() {
-		return sendEmailForComments;
+	public String getSendLeaveApply() {
+		return sendLeaveApply;
 	}
 
 	/**
-	 * @param sendEmailForComments the sendEmailForComments to set
+	 * @param sentEmailLeaveApply the sentEmailLeaveApply to set
 	 */
-	public void setSendEmailForComments(String sendEmailForComments) {
-		this.sendEmailForComments = sendEmailForComments;
+	public void setSendLeaveApply(String sendLeaveApply) {
+		this.sendLeaveApply = sendLeaveApply;
 	}
 
 	/**
@@ -102,5 +105,3 @@ public class AWSConfig {
 	}
 		
 }
-
-

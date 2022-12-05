@@ -13,7 +13,7 @@ import com.capeelectric.model.RegisterDetails;
 @Service
 public interface HistoryService {
 
-	public void addHistoryDetails(History history);
+	public void addHistoryDetails(History history) throws Exception;
 
 //	public List<History> getHistoryDetails(String empid, String managername);
 
