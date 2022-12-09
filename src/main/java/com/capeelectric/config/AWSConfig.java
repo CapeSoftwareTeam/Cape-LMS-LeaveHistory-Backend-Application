@@ -10,7 +10,6 @@ public class AWSConfig {
 	
 	@Value("${aws.email.send}")
 	private String sendEmail;
-
 	
 //	leaveApplyEmail
 	@Value("${aws.email.send.comment}")

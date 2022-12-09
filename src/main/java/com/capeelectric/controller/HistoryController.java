@@ -35,6 +35,7 @@ public class HistoryController {
 	private RegisterService registerService;
 	
 	
+	
 	@PostMapping("/history")
 	public ResponseEntity<String> addHistoryDetails(@RequestBody History history)throws Exception{
 		historyService.addHistoryDetails(history);
@@ -94,8 +95,6 @@ public class HistoryController {
 		return new ResponseEntity<Optional<RegisterDetails>> (registerService.memberDetails(empid), HttpStatus.OK);
 	}	
 	
-
-	
 	@GetMapping("/getHistoryBasedOnUser/{empid}")
 	public ResponseEntity<List<History>> getHistoryBasedOnUser(@PathVariable String empid){
 		return new ResponseEntity<List<History>> (historyService.getHistoryBasedOnUser(empid), HttpStatus.OK);
@@ -111,4 +110,16 @@ public class HistoryController {
 		public ResponseEntity<Optional<LeaveDetails>> leavedetails(@PathVariable String empid){
 		return new ResponseEntity<Optional<LeaveDetails>>(historyService.leavedetails(empid),HttpStatus.OK);
 		}
+	
+	@DeleteMapping("/mystatusDel/{historyId}")
+	public ResponseEntity<String> mystatusdelete(@PathVariable Integer historyId){
+		historyService.mystatusdelete(historyId);
+		return new ResponseEntity<String>("History details deleted successfully",HttpStatus.OK);
+	
+	}	
+	@GetMapping("/leavetrack/{empid}")
+	public Optional<LeaveTrack> LeaveTrackPopUpdetails(@PathVariable String empid){
+		return historyService.LeaveTrackPopUpdetails(empid);
+	}
 }
+

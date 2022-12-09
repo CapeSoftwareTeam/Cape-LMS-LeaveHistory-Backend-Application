@@ -51,7 +51,7 @@ public class History {
 	private Date todate;
 	
 	@Column(name="N0_OF_DAYS")
-	private Integer noofdays;
+	private Float noofdays;
 	
 	@Column(name="LOCATION")
 	private String location;
@@ -60,7 +60,7 @@ public class History {
 	private String status;
 	
 	@Column(name="LOP_DAYS")
-	private Integer lopdays;
+	private Float lopdays;
 	
 	@Column(name="CREATED_BY")
 	private String createdby;
@@ -69,22 +69,22 @@ public class History {
 	private LocalDateTime approveddate ;
 	
 	@Column(name="CASUAL_LEAVE")
-    private Integer casualLeave;
+    private Float casualLeave;
 	
 	@Column(name="SICK_LEAVE")
-	private Integer sickLeave;
+	private Float sickLeave;
 	
 	@Column(name="APPROVED_BY")
 	private String approvedBy;
 
 	@Column(name="PRIVILEGE_LEAVE")
-	private Integer privilegeLeave;
+	private Float privilegeLeave;
 	
 	@Column(name="BEREAVEMENT_LEAVE")
-	private Integer bereavementLeave;
+	private Float bereavementLeave;
 	
 	@Column(name="MATERNITY_LEAVE")
-	private Integer maternityLeave;
+	private Float maternityLeave;
 
 	@Column(name="DESIGNATION")
 	private String designation;
@@ -92,35 +92,12 @@ public class History {
 	@Column(name="MANAGER_NAME")
 	private String managername;
 	
+
 	@Column(name="MANAGER_EMAIL")
 	private String manageremail;
 
-	public String getManageremail() {
-		return manageremail;
-	}
-
-	public void setManageremail(String manageremail) {
-		this.manageremail = manageremail;
-	}
-
 	@Transient
 	private LeaveTrack leaveTrack;
-	
-	public String getManagername() {
-		return managername;
-	}
-
-	public void setManagername(String managername) {
-		this.managername = managername;
-	}
-
-	public String getDesignation() {
-		return designation;
-	}
-
-	public void setDesignation(String designation) {
-		this.designation = designation;
-	}
 
 	public Integer getHistoryid() {
 		return historyid;
@@ -210,11 +187,11 @@ public class History {
 		this.todate = todate;
 	}
 
-	public Integer getNoofdays() {
+	public Float getNoofdays() {
 		return noofdays;
 	}
 
-	public void setNoofdays(Integer noofdays) {
+	public void setNoofdays(Float noofdays) {
 		this.noofdays = noofdays;
 	}
 
@@ -230,15 +207,15 @@ public class History {
 		return status;
 	}
 
-	public String setStatus(String status) {
-		return this.status = status;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
-	public Integer getLopdays() {
+	public Float getLopdays() {
 		return lopdays;
 	}
 
-	public void setLopdays(Integer lopdays) {
+	public void setLopdays(Float lopdays) {
 		this.lopdays = lopdays;
 	}
 
@@ -258,19 +235,19 @@ public class History {
 		this.approveddate = approveddate;
 	}
 
-	public Integer getCasualLeave() {
+	public Float getCasualLeave() {
 		return casualLeave;
 	}
 
-	public void setCasualLeave(Integer casualLeave) {
+	public void setCasualLeave(Float casualLeave) {
 		this.casualLeave = casualLeave;
 	}
 
-	public Integer getSickLeave() {
+	public Float getSickLeave() {
 		return sickLeave;
 	}
 
-	public void setSickLeave(Integer sickLeave) {
+	public void setSickLeave(Float sickLeave) {
 		this.sickLeave = sickLeave;
 	}
 
@@ -282,31 +259,54 @@ public class History {
 		this.approvedBy = approvedBy;
 	}
 
-	public Integer getPrivilegeLeave() {
+	public Float getPrivilegeLeave() {
 		return privilegeLeave;
 	}
 
-	public void setPrivilegeLeave(Integer privilegeLeave) {
+	public void setPrivilegeLeave(Float privilegeLeave) {
 		this.privilegeLeave = privilegeLeave;
 	}
 
-	public Integer getBereavementLeave() {
+	public Float getBereavementLeave() {
 		return bereavementLeave;
 	}
 
-	public void setBereavementLeave(Integer bereavementLeave) {
+	public void setBereavementLeave(Float bereavementLeave) {
 		this.bereavementLeave = bereavementLeave;
 	}
 
-	public Integer getMaternityLeave() {
+	public Float getMaternityLeave() {
 		return maternityLeave;
 	}
 
-	public void setMaternityLeave(Integer maternityLeave) {
+	public void setMaternityLeave(Float maternityLeave) {
 		this.maternityLeave = maternityLeave;
 	}
 
-	
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
+	public String getManagername() {
+		return managername;
+	}
+
+	public void setManagername(String managername) {
+		this.managername = managername;
+	}
+
+	public String getManageremail() {
+		return manageremail;
+	}
+
+	public void setManageremail(String manageremail) {
+		this.manageremail = manageremail;
+	}
+
 	public LeaveTrack getLeaveTrack() {
 		return leaveTrack;
 	}
@@ -314,5 +314,9 @@ public class History {
 	public void setLeaveTrack(LeaveTrack leaveTrack) {
 		this.leaveTrack = leaveTrack;
 	}
+	
+
+	
+	
 }
 	

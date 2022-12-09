@@ -10,8 +10,10 @@ import com.capeelectric.model.LeaveTrack;
 
 @Repository
 public interface LeaveTrackRepository extends CrudRepository<LeaveTrack,Integer> {
+
+	Optional<LeaveTrack> findByEmpid(String empid);
 	
 
-	public Optional<LeaveTrack> findByEmpid(String empid);
+	
 
 }

@@ -17,67 +17,19 @@ public class LeaveDetails {
 	private Integer experience;
 	
 	@Column(name="CASUAL_LEAVE")
-    private Integer casualLeave;
+    private Float casualLeave;
 	
 	@Column(name="SICK_LEAVE")
-	private Integer sickLeave;
+	private Float sickLeave;
 	
 	@Column(name="PRIVILAGE_LEAVE")
-	private Integer privilegeLeave;
+	private Float privilegeLeave;
 	
 	@Column(name="BEREAVEMENT_LEAVE")
-	private Integer bereavementLeave;
+	private Float bereavementLeave;
 	
 	@Column(name="MATERNITY_LEAVE")
-	private Integer maternityLeave;
-	
-	public Integer getExperience() {
-		return experience;
-	}
-
-	public void setExperience(Integer experience) {
-		this.experience = experience;
-	}
-
-	public Integer getCasualLeave() {
-		return casualLeave;
-	}
-
-	public void setCasualLeave(Integer casualLeave) {
-		this.casualLeave = casualLeave;
-	}
-
-	public Integer getSickLeave() {
-		return sickLeave;
-	}
-
-	public void setSickLeave(Integer sickLeave) {
-		this.sickLeave = sickLeave;
-	}
-
-	public Integer getPrivilegeLeave() {
-		return privilegeLeave;
-	}
-
-	public void setPrivilegeLeave(Integer privilegeLeave) {
-		this.privilegeLeave = privilegeLeave;
-	}
-
-	public Integer getBereavementLeave() {
-		return bereavementLeave;
-	}
-
-	public void setBereavementLeave(Integer bereavementLeave) {
-		this.bereavementLeave = bereavementLeave;
-	}
-
-	public Integer getMaternityLeave() {
-		return maternityLeave;
-	}
-
-	public void setMaternityLeave(Integer maternityLeave) {
-		this.maternityLeave = maternityLeave;
-	}
+	private Float maternityLeave;
 
 	public Integer getlId() {
 		return lId;
@@ -87,9 +39,53 @@ public class LeaveDetails {
 		this.lId = lId;
 	}
 
+	public Integer getExperience() {
+		return experience;
+	}
 
+	public void setExperience(Integer experience) {
+		this.experience = experience;
+	}
 
+	public Float getCasualLeave() {
+		return casualLeave;
+	}
+
+	public void setCasualLeave(Float casualLeave) {
+		this.casualLeave = casualLeave;
+	}
+
+	public Float getSickLeave() {
+		return sickLeave;
+	}
+
+	public void setSickLeave(Float sickLeave) {
+		this.sickLeave = sickLeave;
+	}
+
+	public Float getPrivilegeLeave() {
+		return privilegeLeave;
+	}
+
+	public void setPrivilegeLeave(Float privilegeLeave) {
+		this.privilegeLeave = privilegeLeave;
+	}
+
+	public Float getBereavementLeave() {
+		return bereavementLeave;
+	}
+
+	public void setBereavementLeave(Float bereavementLeave) {
+		this.bereavementLeave = bereavementLeave;
+	}
+
+	public Float getMaternityLeave() {
+		return maternityLeave;
+	}
+
+	public void setMaternityLeave(Float maternityLeave) {
+		this.maternityLeave = maternityLeave;
+	}
 	
-
 	
 }

@@ -23,22 +23,22 @@ public class LeaveTrack {
 	private Integer year;
 	
 	@Column(name="CASUAL_LEAVE")
-	private Integer casualLeave;
+	private Float casualLeave;
 	
 	@Column(name="CARRYFORWARD_LEAVE")
-	private Integer carryForwardLeave;
+	private Float carryForwardLeave;
 	
 	@Column(name="SICK_LEAVE")
-	private Integer sickLeave;
+	private Float sickLeave;
 	
 	@Column(name="PRIVILEGE_LEAVE")
-	private Integer privilegeLeave;
+	private Float privilegeLeave;
 	
 	@Column(name="BEREAVEMENT_LEAVE")
-	private Integer bereavementLeave;
+	private Float bereavementLeave;
 	
 	@Column(name="MATERNITY_LEAVE")
-	private Integer maternityLeave;
+	private Float maternityLeave;
 
 	public Integer getLeaveTrackId() {
 		return leaveTrackId;
@@ -64,51 +64,51 @@ public class LeaveTrack {
 		this.year = year;
 	}
 
-	public Integer getCasualLeave() {
+	public Float getCasualLeave() {
 		return casualLeave;
 	}
 
-	public void setCasualLeave(Integer casualLeave) {
+	public void setCasualLeave(Float casualLeave) {
 		this.casualLeave = casualLeave;
 	}
 
-	public Integer getCarryForwardLeave() {
+	public Float getCarryForwardLeave() {
 		return carryForwardLeave;
 	}
 
-	public void setCarryForwardLeave(Integer carryForwardLeave) {
+	public void setCarryForwardLeave(Float carryForwardLeave) {
 		this.carryForwardLeave = carryForwardLeave;
 	}
 
-	public Integer getSickLeave() {
+	public Float getSickLeave() {
 		return sickLeave;
 	}
 
-	public void setSickLeave(Integer sickLeave) {
+	public void setSickLeave(Float sickLeave) {
 		this.sickLeave = sickLeave;
 	}
 
-	public Integer getPrivilegeLeave() {
+	public Float getPrivilegeLeave() {
 		return privilegeLeave;
 	}
 
-	public void setPrivilegeLeave(Integer privilegeLeave) {
+	public void setPrivilegeLeave(Float privilegeLeave) {
 		this.privilegeLeave = privilegeLeave;
 	}
 
-	public Integer getBereavementLeave() {
+	public Float getBereavementLeave() {
 		return bereavementLeave;
 	}
 
-	public void setBereavementLeave(Integer bereavementLeave) {
+	public void setBereavementLeave(Float bereavementLeave) {
 		this.bereavementLeave = bereavementLeave;
 	}
 
-	public Integer getMaternityLeave() {
+	public Float getMaternityLeave() {
 		return maternityLeave;
 	}
 
-	public void setMaternityLeave(Integer maternityLeave) {
+	public void setMaternityLeave(Float maternityLeave) {
 		this.maternityLeave = maternityLeave;
 	}
 

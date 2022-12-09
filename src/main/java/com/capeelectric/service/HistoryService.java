@@ -28,6 +28,8 @@ public interface HistoryService {
 	public void updateApprove(Integer historyId,String empid, String status);
 
 	public LeaveTrack getLeavedetails(String empid);
+	
+	public  Optional<LeaveTrack> LeaveTrackPopUpdetails(String empid);
 
 	public List<History> getHistorylist();
 
@@ -45,7 +47,6 @@ public interface HistoryService {
 
 //	List<History> getHistoryDetails(String department);
 
-
-
+    public void mystatusdelete(Integer historyId);
 
 }
