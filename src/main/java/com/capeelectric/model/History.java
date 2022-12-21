@@ -23,6 +23,9 @@ public class History {
 	@Column(name="REGISTER_ID")
 	private Integer registerid;
 	
+	@Column(name="file_id")
+	private Integer fileid;
+	
 	@Column(name="EMP_ID")
 	private String empid;
 	
@@ -315,7 +318,13 @@ public class History {
 		this.leaveTrack = leaveTrack;
 	}
 	
+	public Integer getFileid() {
+		return fileid;
+	}
 
+	public void setFileid(Integer fileid) {
+		this.fileid = fileid;
+	}
 	
 	
 }

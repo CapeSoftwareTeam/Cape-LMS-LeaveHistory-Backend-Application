@@ -17,7 +17,7 @@ public interface HistoryService {
 
 //	public List<History> getHistoryDetails(String empid, String managername);
 
-	void deleteHistoryDetails(List<History> history);
+	void deleteHistoryDetails(Integer historyId);
 
 //	List<History> getHistoryDetails(String empid);
 
@@ -47,6 +47,13 @@ public interface HistoryService {
 
 //	List<History> getHistoryDetails(String department);
 
+	
     public void mystatusdelete(Integer historyId);
+
+	public void revertcalculation(Integer historyId, String status, String empid);
+
+	public void updateFileHistory(Integer historyId, Integer fileId);
+
+	public Optional<History> getHistoryFile(Integer historyId);
 
 }

@@ -1,6 +1,7 @@
 package com.capeelectric.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,19 +72,24 @@ public class HistoryController {
 	    return new ResponseEntity<List<History>> (historyService.StatusDetails(empid),HttpStatus.OK) ;	    
 	} 
 
-	@DeleteMapping("/history3") 
-	public ResponseEntity<String> deleteHistoryDetails(@RequestBody List<History> history){
-		historyService.deleteHistoryDetails(history);
+	@DeleteMapping("/history3/{historyId}") 
+	public ResponseEntity<String> deleteHistoryDetails(@PathVariable Integer historyId){
+		historyService.deleteHistoryDetails(historyId);
 		return new ResponseEntity<String>("History details deleted successfully",HttpStatus.OK);
 	
 	}	
 	
 	@PutMapping("/hrapprove/{historyId}/{empid}/{status}") 
-	public void updateHistoryDetails(@PathVariable Integer historyId,@PathVariable String status,@RequestBody History history,@PathVariable String empid){
+	public void updateHistoryDetails(@PathVariable Integer historyId,@PathVariable String empid,@PathVariable String status){
 		historyService.updateApprove(historyId,empid,status);
 		
 		//return new ResponseEntity<void>("History details updated",HttpStatus.OK);	
 		//return new ResponseEntity<String>("History details updated",HttpStatus.OK);	
+	}
+	
+	@PutMapping("/updateHistory/{historyId}/{status}/{empid}")
+	public void revertcalculation(@PathVariable Integer historyId,@PathVariable String status,@PathVariable String empid) {
+		historyService.revertcalculation(historyId,status,empid);
 	}
 	
 	@GetMapping("/getLeavedetails/{empid}") 
@@ -93,8 +99,9 @@ public class HistoryController {
 	@GetMapping("/getMemberdetails/{empid}")
 	public ResponseEntity<Optional<RegisterDetails>> memberDetails(@PathVariable String empid){
 		return new ResponseEntity<Optional<RegisterDetails>> (registerService.memberDetails(empid), HttpStatus.OK);
-	}	
+	}
 	
+
 	@GetMapping("/getHistoryBasedOnUser/{empid}")
 	public ResponseEntity<List<History>> getHistoryBasedOnUser(@PathVariable String empid){
 		return new ResponseEntity<List<History>> (historyService.getHistoryBasedOnUser(empid), HttpStatus.OK);
@@ -121,5 +128,17 @@ public class HistoryController {
 	public Optional<LeaveTrack> LeaveTrackPopUpdetails(@PathVariable String empid){
 		return historyService.LeaveTrackPopUpdetails(empid);
 	}
+	
+	@PutMapping("/fileUpdate/{historyId}/{fileId}")
+	public void updateFile(@PathVariable Integer historyId,@PathVariable Integer fileId){
+		historyService.updateFileHistory(historyId,fileId);
+		
+			
+	} 
+	@GetMapping("/getHistoryId/{historyId}")
+	public Optional<History> getHistoryId(@PathVariable Integer historyId){
+		return historyService.getHistoryFile(historyId);
+	}
+	
 }
 

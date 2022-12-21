@@ -52,13 +52,13 @@ public class HistoryServiceImpl implements HistoryService {
 	@Autowired
 	private RestTemplate restTemplate;
 	  
-      @Autowired
-      private AWSConfig awsConfiguration;
+    @Autowired
+    private AWSConfig awsConfiguration;
 
-	// if anyone apply leave, this code will help you fetch it to history table
+	// Post leave in history table (Add leave) and (Mail triggering code)
 	@Override
-	public void addHistoryDetails(History history) throws Exception {
-		history.setCreatedby(history.getName());
+	public void addHistoryDetails(History history) throws Exception {	
+//		history.setCreatedby(history.getName());
 		history.setCreateddate(LocalDateTime.now());
 		historyRepository.save(history);	
 //		sendEmailForLeaveApply(history.getManageremail(),"sangeetha@capeindia.net","subject: Need in response to the leave applied from the"+history.getEmpid()+"-"+history.getName()+"\\r\\n"
@@ -74,6 +74,10 @@ public class HistoryServiceImpl implements HistoryService {
 //				);
 //	}
 	}
+	
+	
+	
+	
 	// if leave gets approved this code will help you
 	@Override
 	public LeaveTrack getLeavedetails(String empid) {
@@ -167,7 +171,8 @@ public class HistoryServiceImpl implements HistoryService {
 
 // here we get status approve and calculate and get the leave track details here
 	@Override
-	public void updateApprove(Integer historyId, String status,String empid ) {
+	public void updateApprove(Integer historyId,String empid, String status ) {
+		
 		Optional<RegisterDetails> registerDetailsRepo = registerDetailsRepository.findByEmpid(empid);
 		Optional<History> historyRepo = historyRepository.findById(historyId);
 		String Empid=historyRepo.get().getEmpid();
@@ -197,8 +202,8 @@ public class HistoryServiceImpl implements HistoryService {
 //			System.out.println(historyId);
 //			System.out.println(status);
 			
-			if(status.equalsIgnoreCase("Approved")) 
-				if(historyDetails.getLeaveType().equalsIgnoreCase("casual")) {
+			
+				if(historyDetails.getLeaveType().equalsIgnoreCase("casual") && status.equalsIgnoreCase("Approved")) {
 					if(leaveTrackRepo.get().getCarryForwardLeave()!=0.0f && leaveTrackRepo.get().getCarryForwardLeave()>0) {
 						if(historyDetails.getNoofdays()<=(leaveTrackRepo.get().getCarryForwardLeave())) {
 							float carry=leaveTrackRepo.get().getCarryForwardLeave()-historyDetails.getNoofdays();
@@ -368,6 +373,7 @@ public class HistoryServiceImpl implements HistoryService {
 				historyDetails.setStatus(status);
 				historyDetails.setApprovedBy(historyDetails.getName());
 				historyDetails.setApproveddate(LocalDateTime.now());
+//				System.out.println("pettaaaaaa");
 //				historyRepo.setCasualLeave(leaveTrack.getCasualLeave());
          		historyRepository.save(historyDetails);
 			}
@@ -550,7 +556,14 @@ public class HistoryServiceImpl implements HistoryService {
 				historyDetails.setSickLeave(leaveTrackRepo.get().getSickLeave());
 				historyDetails.setCasualLeave(leaveTrackRepo.get().getCasualLeave());
 				historyDetails.setStatus(status);
-				historyDetails.setApprovedBy(historyDetails.getName());
+				if(historyDetails.getDesignation()!="Manager") {
+					historyDetails.setApprovedBy(historyDetails.getManagername());
+				}
+				else {
+					historyDetails.setApprovedBy(historyDetails.getName());
+				}
+				
+			
 				historyDetails.setApproveddate(LocalDateTime.now());
 //				historyRepo.setCasualLeave(leaveTrack.getCasualLeave());
          		historyRepository.save(historyDetails);
@@ -578,7 +591,11 @@ public class HistoryServiceImpl implements HistoryService {
 	
 	// this code is for delete history
 	@Override
-	public void deleteHistoryDetails(List<History> history) {
+	public void deleteHistoryDetails(Integer historyId) {
+		historyRepository.deleteById(historyId);
+	
+	
+//		historyRepository.deleteAll();
 	}
 
 	@Override
@@ -658,7 +675,76 @@ public class HistoryServiceImpl implements HistoryService {
 		// TODO Auto-generated method stub
 		return leaveTrackRepository.findByEmpid(empid);
 	}
+	@Override
+	public void revertcalculation(Integer historyId, String status,String empid) {
+		Optional<History> historyRepo = historyRepository.findById(historyId);
+		History historyDetails = historyRepo.get();
+		Optional<LeaveTrack> leaveTrackRepo = leaveTrackRepository.findByEmpid(empid);
+		LeaveTrack leaveTrack= new LeaveTrack();
+		if(historyRepo.get().getStatus()=="cancelled") {
+			if(historyRepo.get().getLeaveType().equalsIgnoreCase("casual")) {
+				historyDetails.setLopdays(0.0f);
+			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();
+				leaveTrack.setCarryForwardLeave(leaveTrack.getCarryForwardLeave()+setcarryforward);
+				historyDetails.setCasualLeave(historyDetails.getCasualLeave()+setcarryforward);
+			}
+			if(historyRepo.get().getLeaveType().equalsIgnoreCase("sick")) {
+				historyDetails.setLopdays(0.0f);
+			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();
+				historyDetails.setSickLeave(historyDetails.getSickLeave()+setcarryforward);
+			}
+			if(historyRepo.get().getLeaveType().equalsIgnoreCase("bereavement")) {
+				historyDetails.setLopdays(0.0f);
+			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();
+				historyDetails.setBereavementLeave(historyDetails.getBereavementLeave()+setcarryforward);
+			}
+			if(historyRepo.get().getLeaveType().equalsIgnoreCase("privilege")) {
+				historyDetails.setLopdays(0.0f);
+			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();
+				historyDetails.setPrivilegeLeave(historyDetails.getPrivilegeLeave()+setcarryforward);
+			}
+			if(historyRepo.get().getLeaveType().equalsIgnoreCase("maternity")) {
+				historyDetails.setLopdays(0.0f);
+			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();
+				historyDetails.setMaternityLeave(historyDetails.getMaternityLeave()+setcarryforward);
+			}
+			
+		}
+		
+	}
+
+
+
+
+	@Override
+	public void updateFileHistory(Integer historyId, Integer fileId) {
+		// TODO Auto-generated method stub
+		Optional<History> historyRepo = historyRepository.findById(historyId);
+		History historyDetails = historyRepo.get();
+		if(historyRepo.isPresent()) {
+		System.out.println("ihugyftrfghkjl;ljhghffgkjlkjhgckjhg");
+			historyDetails.setFileid(fileId);
+			historyRepository.save(historyDetails);
+		}
+		
+		
+	}
+
+
+
+
+	@Override
+	public Optional<History> getHistoryFile(Integer historyId) {
+		// TODO Auto-generated method stub
+		return historyRepository.findById(historyId);
+	}
 	
 
+	
+	
+	
+	
+	
+	
 
 }
