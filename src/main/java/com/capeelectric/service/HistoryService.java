@@ -3,21 +3,20 @@ package com.capeelectric.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
-
 import com.capeelectric.model.History;
 import com.capeelectric.model.LeaveDetails;
 import com.capeelectric.model.LeaveTrack;
-import com.capeelectric.model.RegisterDetails;
 
-@Service
+
 public interface HistoryService {
 
 	public void addHistoryDetails(History history) throws Exception;
 
 //	public List<History> getHistoryDetails(String empid, String managername);
 
-	void deleteHistoryDetails(Integer historyId);
+
+	 public void deleteHistoryDetails(Integer historyid);
+
 
 //	List<History> getHistoryDetails(String empid);
 
@@ -37,6 +36,7 @@ public interface HistoryService {
 
 	public List<History> getHistoryBasedOnRole(String role);
 
+
 	public Optional<LeaveDetails> leavedetails(String empid);
 
 	public List<History> empStatusDetails(String empid);
@@ -55,5 +55,10 @@ public interface HistoryService {
 	public void updateFileHistory(Integer historyId, Integer fileId);
 
 	public Optional<History> getHistoryFile(Integer historyId);
+
+	public void downloadHistory(List<History> history) throws Exception;
+
+	public void delete(List<History> listOfHistory);
+
 
 }

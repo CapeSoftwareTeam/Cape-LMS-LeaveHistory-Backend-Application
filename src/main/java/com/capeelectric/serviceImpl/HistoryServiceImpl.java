@@ -1,5 +1,6 @@
 package com.capeelectric.serviceImpl;
 
+
 import com.capeelectric.config.AWSConfig;
 import com.capeelectric.model.EmailContent;
 
@@ -12,6 +13,12 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,6 +41,20 @@ import com.capeelectric.repository.LeaveTrackRepository;
 import com.capeelectric.repository.RegisterRepository;
 import com.capeelectric.service.HistoryService;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+
 @Service
 public class HistoryServiceImpl implements HistoryService {
 
@@ -54,11 +75,11 @@ public class HistoryServiceImpl implements HistoryService {
 	  
     @Autowired
     private AWSConfig awsConfiguration;
-
-	// Post leave in history table (Add leave) and (Mail triggering code)
+    	// Post leave in history table (Add leave) and (Mail triggering code)
 	@Override
 	public void addHistoryDetails(History history) throws Exception {	
 //		history.setCreatedby(history.getName());
+
 		history.setCreateddate(LocalDateTime.now());
 		historyRepository.save(history);	
 //		sendEmailForLeaveApply(history.getManageremail(),"sangeetha@capeindia.net","subject: Need in response to the leave applied from the"+history.getEmpid()+"-"+history.getName()+"\\r\\n"
@@ -74,6 +95,7 @@ public class HistoryServiceImpl implements HistoryService {
 //				);
 //	}
 	}
+
 	
 	
 	
@@ -106,6 +128,7 @@ public class HistoryServiceImpl implements HistoryService {
 			
 			System.out.println("issssssssssssssssssssssssssssssssssss");
 			Float availableLeave = 0.0f;
+
 			int monthValue = LocalDate.now().getMonthValue(); // march
 
 			switch (monthValue) {
@@ -153,7 +176,7 @@ public class HistoryServiceImpl implements HistoryService {
 			return leaveTrackRepo.get();
 
 		} else {
-            System.out.println("usssssssssssssssssssssss");
+
 			LeaveTrack leaveTrack = new LeaveTrack();
 			leaveTrack.setCasualLeave(leaveDetailsRepo.get().getCasualLeave());
 			leaveTrack.setBereavementLeave(leaveDetailsRepo.get().getBereavementLeave());
@@ -168,6 +191,7 @@ public class HistoryServiceImpl implements HistoryService {
 
 		// return null;
 	}
+
 
 // here we get status approve and calculate and get the leave track details here
 	@Override
@@ -649,6 +673,20 @@ public class HistoryServiceImpl implements HistoryService {
 //		emailContent.setContentDetails(content);
 //		RequestEntity<EmailContent> requestEntity = new RequestEntity<>(emailContent, headers, HttpMethod.PUT, uri);
 //		ParameterizedTypeReference<EmailContent> typeRef = new ParameterizedTypeReference<EmailContent>() {};
+
+//	@Override
+//	public void updateHistoryDetails(History history) {
+//		
+//			
+//		}
+
+
+
+//	//get userdetails
+//	 public History postdetails(String empid){
+//		 
+// 
+
 //
 //		ResponseEntity<EmailContent> responseEntity = restTemplate.exchange(requestEntity, typeRef);
 //		
@@ -656,6 +694,7 @@ public class HistoryServiceImpl implements HistoryService {
 //	}
 
 	@Override
+
 	public List<History> empStatusDetails(String empid) {
 
 		return historyRepository.findByEmpid(empid);
@@ -740,11 +779,145 @@ public class HistoryServiceImpl implements HistoryService {
 	}
 	
 
-	
-	
-	
-	
-	
-	
 
+
+	@SuppressWarnings("resource")
+	@Override
+	public void downloadHistory(List<History> history ) throws Exception {
+
+		Document document = new Document(PageSize.A4, 28, 28, 62, 68);
+		PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("hi.pdf"));
+		document.open();
+		Font font = new Font(BaseFont.createFont(), 9, Font.BOLD | Font.BOLD, BaseColor.BLACK);
+		Font font1 = new Font(BaseFont.createFont(), 9, Font.NORMAL | Font.NORMAL, BaseColor.BLACK);
+		Paragraph paragraphOne = new Paragraph("HISTORY DETAILS ", font);
+		paragraphOne.setAlignment(Element.ALIGN_CENTER);
+		//Create Table object, Here 4 specify the no. of columns
+		float[] pointColumnWidths = { 100F, 140F ,140F, 130F ,120F, 80F ,130F ,150F };
+        PdfPTable pdfPTable = new PdfPTable(pointColumnWidths);
+        pdfPTable.setWidthPercentage(100); // Width 100%
+        pdfPTable.setSpacingBefore(30f); // Space before table
+        pdfPTable.getDefaultCell();
+        
+        Font font2 = new Font(BaseFont.createFont(), 13, Font.BOLD | Font.BOLD, BaseColor.BLACK);
+		Paragraph paragraphtwo = new Paragraph("Employee's Leave Data ", font2);
+		paragraphtwo.setAlignment(Element.ALIGN_CENTER);
+	
+        //Create cells
+            //Add cells to table
+            PdfPCell cell = new PdfPCell();
+    
+    		cell.setPadding(10);
+    		cell.setPhrase(new Phrase("EmpId", font));
+    		cell.setGrayFill(0.92f);
+    		pdfPTable.addCell(cell);
+    		cell.setPhrase(new Phrase("Name", font));
+    		cell.setGrayFill(0.92f);
+    		pdfPTable.addCell(cell);
+   	   		cell.setPhrase(new Phrase("Department", font));
+    		cell.setGrayFill(0.92f);
+    		pdfPTable.addCell(cell);
+    		cell.setPhrase(new Phrase("FromDate", font));
+    		cell.setGrayFill(0.92f);
+    		pdfPTable.addCell(cell);
+    		cell.setPhrase(new Phrase("ToDate", font));
+    		cell.setGrayFill(0.92f);
+    		pdfPTable.addCell(cell);
+    		cell.setPhrase(new Phrase("NoOfDays", font));
+    		cell.setGrayFill(0.92f);
+    		pdfPTable.addCell(cell);
+    		cell.setPhrase(new Phrase("LeaveType", font));
+    		cell.setGrayFill(0.92f);
+    		pdfPTable.addCell(cell);
+    		cell.setPhrase(new Phrase("Location", font));
+    		cell.setGrayFill(0.92f);
+    		pdfPTable.addCell(cell);
+		
+			for (History historydata : history) {
+				cell.setPhrase(new Phrase(historydata.getEmpid(), font1));
+				pdfPTable.addCell(cell);
+				cell.setPhrase(new Phrase(historydata.getName(), font1));
+
+				pdfPTable.addCell(cell);
+				cell.setPhrase(new Phrase(historydata.getDepartment(), font1));
+
+				pdfPTable.addCell(cell);
+				cell.setPhrase(new Phrase(historydata.getFromDate(), font1));
+
+				pdfPTable.addCell(cell);
+				cell.setPhrase(new Phrase(historydata.getToDate(), font1));
+
+				pdfPTable.addCell(cell);
+				if (historydata.getLopdays() == null) {
+					cell.setPhrase(new Phrase("0", font1));
+
+				} else {
+					cell.setPhrase(new Phrase(historydata.getLopdays().toString(), font1));
+				}
+				pdfPTable.addCell(cell);
+
+				if (historydata.getLeaveType().equalsIgnoreCase("casual")) {
+					cell.setPhrase(new Phrase("CL", font1));
+				}
+
+				else if (historydata.getLeaveType().equalsIgnoreCase("sick")) {
+					cell.setPhrase(new Phrase("SL", font1));
+				} else if (historydata.getLeaveType().equalsIgnoreCase("bereavement")) {
+					cell.setPhrase(new Phrase("BL", font1));
+				} else if (historydata.getLeaveType().equalsIgnoreCase("privilege")) {
+					cell.setPhrase(new Phrase("PL", font1));
+				} else if (historydata.getLeaveType().equalsIgnoreCase("maternity")) {
+					cell.setPhrase(new Phrase("ML", font1));
+				} else {
+					cell.setPhrase(new Phrase("SL", font1));
+
+				}
+				pdfPTable.addCell(cell);
+				cell.setPhrase(new Phrase(historydata.getLocation(), font1));
+				pdfPTable.addCell(cell);
+
+			}
+		
+		Font font5 = new Font(BaseFont.createFont(), 10, Font.NORMAL | Font.BOLD, BaseColor.BLACK);
+		PdfPTable table2 = new PdfPTable(1);
+		table2.setWidthPercentage(100); // Width 100%
+		table2.setSpacingBefore(10f); // Space before table
+		table2.getDefaultCell().setBorder(0);
+
+		PdfPCell cell25 = new PdfPCell(new Paragraph(15, "LeaveType ", font5));
+		//cell25.setBorder(PdfPCell.NO_BORDER);
+		cell25.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		table2.addCell(cell25);
+		
+
+
+		Paragraph paragraph1 = new Paragraph("CL => Casual Leave"); 
+		Paragraph paragraph2 = new Paragraph ("BL => Bereavement Leave"); 
+		Paragraph paragraph3 = new Paragraph("PL => Privilege Leave"); 
+		Paragraph paragraph4 = new Paragraph("ML => Maternity Leave");
+				
+
+		document.add(paragraphtwo);
+		document.add(pdfPTable);
+		document.add(table2);
+		document.add(paragraph1);
+		document.add(paragraph2);
+		document.add(paragraph3);
+		document.add(paragraph4);
+		document.close();
+		
+//		return null;
+		
+ 
+	}
+
+	@Override
+	public void delete(List<History> listOfHistory) {
+		historyRepository.deleteAll(listOfHistory);
+	}
+	
 }
+	
+		
+ 
+

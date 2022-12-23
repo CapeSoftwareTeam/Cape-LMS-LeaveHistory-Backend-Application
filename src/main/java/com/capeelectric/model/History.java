@@ -94,7 +94,13 @@ public class History {
 	
 	@Column(name="MANAGER_NAME")
 	private String managername;
+
+	@Transient
+	private String toDate;
 	
+	@Transient
+	private String fromDate;
+
 
 	@Column(name="MANAGER_EMAIL")
 	private String manageremail;
@@ -116,6 +122,14 @@ public class History {
 
 	public void setRegisterid(Integer registerid) {
 		this.registerid = registerid;
+	}
+
+	public Integer getFileid() {
+		return fileid;
+	}
+
+	public void setFileid(Integer fileid) {
+		this.fileid = fileid;
 	}
 
 	public String getEmpid() {
@@ -302,6 +316,22 @@ public class History {
 		this.managername = managername;
 	}
 
+	public String getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
+	}
+
+	public String getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+
 	public String getManageremail() {
 		return manageremail;
 	}
@@ -318,14 +348,6 @@ public class History {
 		this.leaveTrack = leaveTrack;
 	}
 	
-	public Integer getFileid() {
-		return fileid;
-	}
+	
 
-	public void setFileid(Integer fileid) {
-		this.fileid = fileid;
-	}
-	
-	
-}
-	
+}	
