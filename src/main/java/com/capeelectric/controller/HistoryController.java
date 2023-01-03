@@ -103,10 +103,15 @@ public class HistoryController {
 	}
 
 	@PutMapping("/updateHistory/{historyId}/{status}/{empid}")
-	public void revertcalculation(@PathVariable Integer historyId, @PathVariable String status,
-			@PathVariable String empid) {
-		historyService.revertcalculation(historyId, status, empid);
+	public void revertcalculation(@PathVariable Integer historyId,
+			@PathVariable String empid, @PathVariable String status) {
+		historyService.revertcalculation(historyId, empid, status);
 	}
+	
+//	@PutMapping("/yearUpdate")
+//	public void updateleavetrack() {
+//		historyService.updateleavetrack();
+//	}
 
 	@GetMapping("/getLeavedetails/{empid}")
 	public LeaveTrack getLeavedetails(@PathVariable String empid) {
@@ -159,7 +164,7 @@ public class HistoryController {
 	}
 
 	@PutMapping("/downloadHistory")
-	public void doenloadHistory(@RequestBody List<History> history) throws Exception {
+	public void downloadHistory(@RequestBody List<History> history) throws Exception {
 		historyService.downloadHistory(history);
 
 	}
@@ -175,6 +180,7 @@ public class HistoryController {
 		}
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/pdf"))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "hi.pdf" + "\"").body(resource);
-
 	}
+	
+
 }

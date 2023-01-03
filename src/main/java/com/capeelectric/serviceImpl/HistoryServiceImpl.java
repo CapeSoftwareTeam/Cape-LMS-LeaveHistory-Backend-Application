@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.MediaType;
@@ -49,6 +50,7 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.log.SysoCounter;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -103,7 +105,7 @@ public class HistoryServiceImpl implements HistoryService {
 	// if leave gets approved this code will help you
 	@Override
 	public LeaveTrack getLeavedetails(String empid) {
-		  System.out.println("aaaaaaaaaaaasssssssssssssssssssssss");
+
 		Optional<RegisterDetails> registerDetailsRepo = registerDetailsRepository.findByEmpid(empid);
 		Optional<LeaveDetails> leaveDetailsRepo = leaveDetailsRepository.findByExperience(registerDetailsRepo.get().getTotalexperience());
 
@@ -111,9 +113,11 @@ public class HistoryServiceImpl implements HistoryService {
 
 		float i = leaveDetailsRepo.get().getCasualLeave();
 		i= i / 12;
+	
 
-		if (leaveTrackRepo.isPresent() && null != leaveTrackRepo.get()
-				&& leaveTrackRepo.get().getYear().equals(LocalDate.now().getYear())) {
+		if (leaveTrackRepo.isPresent() && null != leaveTrackRepo.get()) {
+			if(leaveTrackRepo.get().getYear().equals(LocalDate.now().getYear())) {
+		
 			
 //			if(leaveTrackRepo.isPresent() != leaveTrackRepo.get().getYear().equals(LocalDate.now().getYear()){
 //			LeaveTrack leaveTrack = new LeaveTrack();
@@ -174,9 +178,27 @@ public class HistoryServiceImpl implements HistoryService {
 			leaveTrackRepo.get().setCarryForwardLeave(availableLeave - leaveTrackRepo.get().getCasualLeave());
 
 			return leaveTrackRepo.get();
+}
+			else {
+            leaveTrackRepository.deleteById(leaveTrackRepo.get().getLeaveTrackId());
 
-		} else {
+            LeaveTrack leaveTrack = new LeaveTrack();
 
+            leaveTrack.setCasualLeave(leaveDetailsRepo.get().getCasualLeave());
+            leaveTrack.setBereavementLeave(leaveDetailsRepo.get().getBereavementLeave());
+            leaveTrack.setMaternityLeave(leaveDetailsRepo.get().getMaternityLeave());
+            leaveTrack.setPrivilegeLeave(leaveDetailsRepo.get().getPrivilegeLeave());
+            leaveTrack.setSickLeave(leaveDetailsRepo.get().getSickLeave());
+            leaveTrack.setCarryForwardLeave(i);
+            leaveTrack.setYear(LocalDate.now().getYear());
+            leaveTrack.setEmpid(empid);
+            return leaveTrackRepository.save(leaveTrack);
+        }
+		}
+		else {
+		
+
+		    
 			LeaveTrack leaveTrack = new LeaveTrack();
 			leaveTrack.setCasualLeave(leaveDetailsRepo.get().getCasualLeave());
 			leaveTrack.setBereavementLeave(leaveDetailsRepo.get().getBereavementLeave());
@@ -188,10 +210,9 @@ public class HistoryServiceImpl implements HistoryService {
 			leaveTrack.setYear(LocalDate.now().getYear());
 			return leaveTrackRepository.save(leaveTrack);
 		}
-
 		// return null;
+	
 	}
-
 
 // here we get status approve and calculate and get the leave track details here
 	@Override
@@ -219,187 +240,15 @@ public class HistoryServiceImpl implements HistoryService {
 			leaveTrack.setYear(historyRepo.get().getCreateddate().getYear());
 			leaveTrackRepository.save(leaveTrack);
 			
-	History historyDetails = historyRepo.get();
+	          History historyDetails = historyRepo.get();
 			
 //			LeaveTrack leaveTrack = leaveTrackRepo.get();
 //			System.out.println(empid);
 //			System.out.println(historyId);
 //			System.out.println(status);
+	     calculation(historyId,empid,status);
 			
 			
-				if(historyDetails.getLeaveType().equalsIgnoreCase("casual") && status.equalsIgnoreCase("Approved")) {
-					if(leaveTrackRepo.get().getCarryForwardLeave()!=0.0f && leaveTrackRepo.get().getCarryForwardLeave()>0) {
-						if(historyDetails.getNoofdays()<=(leaveTrackRepo.get().getCarryForwardLeave())) {
-							float carry=leaveTrackRepo.get().getCarryForwardLeave()-historyDetails.getNoofdays();
-							float casual=leaveTrackRepo.get().getCasualLeave()-leaveTrackRepo.get().getCarryForwardLeave();
-							leaveTrack.setCasualLeave(casual);
-							leaveTrack.setCarryForwardLeave(carry);
-							leaveTrackRepository.save(leaveTrack);
-						}
-						else {
-//							int casualForless=leaveTrackRepo.get().getCasualLeave()-historyDetails.getNoofdays();
-							float lop=historyDetails.getNoofdays()-leaveTrackRepo.get().getCarryForwardLeave();
-//							leaveTrack.setCasualLeave(casualForless);
-							leaveTrack.setCarryForwardLeave(0.0f);
-							leaveTrackRepository.save(leaveTrack);
-							historyDetails.setLopdays(lop);
-						}
-					}
-					else {
-						float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getCarryForwardLeave();
-						historyDetails.setLopdays(lop);
-						leaveTrackRepository.save(leaveTrack);
-					}
-				
-				}
-			 if(historyDetails.getLeaveType().equalsIgnoreCase("sick")) {
-					if(leaveTrackRepo.get().getSickLeave()!= 0.0f && leaveTrackRepo.get().getSickLeave() > 0) {
-						if(historyDetails.getNoofdays()<=leaveTrackRepo.get().getSickLeave()) {
-							float num=historyDetails.getNoofdays();
-							float sick= leaveTrackRepo.get().getSickLeave()-historyDetails.getNoofdays() ;
-							if(sick < 0.5) {
-								leaveTrack.setSickLeave(0.0f);
-								historyDetails.setLopdays(num);
-								leaveTrackRepository.save(leaveTrack);
-							
-							}else {
-								leaveTrack.setSickLeave(sick);
-								System.out.println(sick);
-								leaveTrackRepository.save(leaveTrack);
-							}
-							
-						}
-						else {
-							float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getSickLeave();
-							System.out.println("sick"+lop);
-							leaveTrack.setSickLeave(lop);
-							historyDetails.setLopdays(lop);
-							leaveTrackRepository.save(leaveTrack);
-							}
-					}
-						
-					
-					else {
-						float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getSickLeave();
-							historyDetails.setLopdays(lop);
-							leaveTrackRepository.save(leaveTrack);
-						}
-				 }
-//				
-				 if(historyDetails.getLeaveType().equalsIgnoreCase("bereavement")) {
-						if(leaveTrackRepo.get().getBereavementLeave()!= 0.0f && leaveTrackRepo.get().getBereavementLeave() > 0) {
-							if(historyDetails.getNoofdays()<=leaveTrackRepo.get().getBereavementLeave()) {
-								float num=historyDetails.getNoofdays();
-								float sick= leaveTrackRepo.get().getBereavementLeave()-historyDetails.getNoofdays() ;
-								if(sick < 0.5) {
-									leaveTrack.setBereavementLeave(0.0f);
-									historyDetails.setLopdays(num);
-									leaveTrackRepository.save(leaveTrack);
-								
-								}else {
-									leaveTrack.setBereavementLeave(sick);
-									System.out.println(sick);
-									leaveTrackRepository.save(leaveTrack);
-								}
-								
-							}
-							else {
-								float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getBereavementLeave();
-								System.out.println("sick"+lop);
-								leaveTrack.setBereavementLeave(lop);
-								historyDetails.setLopdays(lop);
-								leaveTrackRepository.save(leaveTrack);
-								}
-						}
-							
-						
-						else {
-							float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getBereavementLeave();
-								historyDetails.setLopdays(lop);
-								leaveTrackRepository.save(leaveTrack);
-							}
-					 }
-				 if(historyDetails.getLeaveType().equalsIgnoreCase("privilege")) {
-						if(leaveTrackRepo.get().getPrivilegeLeave()!= 0.0f && leaveTrackRepo.get().getPrivilegeLeave() > 0) {
-							if(historyDetails.getNoofdays()<=leaveTrackRepo.get().getPrivilegeLeave()) {
-								float num=historyDetails.getNoofdays();
-								float sick= leaveTrackRepo.get().getPrivilegeLeave()-historyDetails.getNoofdays() ;
-								if(sick < 0.5) {
-									leaveTrack.setPrivilegeLeave(0.0f);
-									historyDetails.setLopdays(num);
-									leaveTrackRepository.save(leaveTrack);
-								
-								}else {
-									leaveTrack.setPrivilegeLeave(sick);
-									leaveTrackRepository.save(leaveTrack);
-								}
-								
-							}
-							else {
-								float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getPrivilegeLeave();
-								System.out.println("sick"+lop);
-								leaveTrack.setPrivilegeLeave(lop);
-								historyDetails.setLopdays(lop);
-								leaveTrackRepository.save(leaveTrack);
-								}
-						}
-							
-						
-						else {
-							float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getPrivilegeLeave();
-								historyDetails.setLopdays(lop);
-								leaveTrackRepository.save(leaveTrack);
-							}
-					 }
-				 
-				 if(historyDetails.getLeaveType().equalsIgnoreCase("maternity") && 
-						 (registerDetailsRepo.get().getGender().equalsIgnoreCase("female") && 
-								 registerDetailsRepo.get().getMaritalstatus().equalsIgnoreCase("married"))) {	
-						if(leaveTrackRepo.get().getMaternityLeave()!=0.0f  && leaveTrackRepo.get().getMaternityLeave() > 0) {
-							if(historyDetails.getNoofdays()<=leaveTrackRepo.get().getMaternityLeave()) {
-								float num=historyDetails.getNoofdays();
-								float sick= leaveTrackRepo.get().getMaternityLeave()-historyDetails.getNoofdays() ;
-								if(sick < 0.5) {
-									leaveTrack.setMaternityLeave(0.0f);
-									historyDetails.setLopdays(num);
-									leaveTrackRepository.save(leaveTrack);
-								
-								}else {
-									leaveTrack.setMaternityLeave(sick);
-									leaveTrackRepository.save(leaveTrack);
-								}
-								
-							}
-							else {
-								float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getMaternityLeave();
-								System.out.println("sick"+lop);
-								leaveTrack.setMaternityLeave(lop);
-								historyDetails.setLopdays(lop);
-								leaveTrackRepository.save(leaveTrack);
-								}
-						}
-							
-						
-						else {
-							float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getMaternityLeave();
-								historyDetails.setLopdays(lop);
-								leaveTrackRepository.save(leaveTrack);
-							}
-					 }
-				
-				System.out.println("gadfjsyjaszyfdtsakgfudsgkufsdkugfkuaeywgsfkyagsz");
-				
-				historyDetails.setMaternityLeave(leaveTrackRepo.get().getMaternityLeave());
-				historyDetails.setPrivilegeLeave(leaveTrackRepo.get().getPrivilegeLeave());
-				historyDetails.setBereavementLeave(leaveTrackRepo.get().getBereavementLeave());
-				historyDetails.setSickLeave(leaveTrackRepo.get().getSickLeave());
-				historyDetails.setCasualLeave(leaveTrackRepo.get().getCasualLeave());
-				historyDetails.setStatus(status);
-				historyDetails.setApprovedBy(historyDetails.getName());
-				historyDetails.setApproveddate(LocalDateTime.now());
-//				System.out.println("pettaaaaaa");
-//				historyRepo.setCasualLeave(leaveTrack.getCasualLeave());
-         		historyRepository.save(historyDetails);
 			}
 	
 	else
@@ -407,195 +256,12 @@ public class HistoryServiceImpl implements HistoryService {
 			History historyDetails = historyRepo.get();
 			
 			LeaveTrack leaveTrack = leaveTrackRepo.get();
-//			System.out.println(empid);
-//			System.out.println(historyId);
-//			System.out.println(status);
-			
-			if(status.equalsIgnoreCase("Approved")) 
-				if(historyDetails.getLeaveType().equalsIgnoreCase("casual")) {
-					if(leaveTrackRepo.get().getCarryForwardLeave()!=0.0f && leaveTrackRepo.get().getCarryForwardLeave()>0) {
-						if(historyDetails.getNoofdays()<=(leaveTrackRepo.get().getCarryForwardLeave())) {
-							float carry=leaveTrackRepo.get().getCarryForwardLeave()-historyDetails.getNoofdays();
-							float casual=leaveTrackRepo.get().getCasualLeave()-leaveTrackRepo.get().getCarryForwardLeave();
-							leaveTrack.setCasualLeave(casual);
-							leaveTrack.setCarryForwardLeave(carry);
-							leaveTrackRepository.save(leaveTrack);
-						}
-						else {
-//							int casualForless=leaveTrackRepo.get().getCasualLeave()-historyDetails.getNoofdays();
-							float lop=historyDetails.getNoofdays()-leaveTrackRepo.get().getCarryForwardLeave();
-//							leaveTrack.setCasualLeave(casualForless);
-							leaveTrack.setCarryForwardLeave(0.0f);
-							leaveTrackRepository.save(leaveTrack);
-							historyDetails.setLopdays(lop);
-						}
-					}
-					else {
-						float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getCarryForwardLeave();
-						historyDetails.setLopdays(lop);
-						leaveTrackRepository.save(leaveTrack);
-					}
-				
-				}
-			 if(historyDetails.getLeaveType().equalsIgnoreCase("sick")) {
-					if(leaveTrackRepo.get().getSickLeave()!= 0.0f && leaveTrackRepo.get().getSickLeave() > 0) {
-						if(historyDetails.getNoofdays()<=leaveTrackRepo.get().getSickLeave()) {
-							float num=historyDetails.getNoofdays();
-							float sick= leaveTrackRepo.get().getSickLeave()-historyDetails.getNoofdays() ;
-							if(sick < 0.5) {
-								leaveTrack.setSickLeave(0.0f);
-								historyDetails.setLopdays(num);
-								leaveTrackRepository.save(leaveTrack);
-							
-							}else {
-								leaveTrack.setSickLeave(sick);
-								System.out.println(sick);
-								leaveTrackRepository.save(leaveTrack);
-							}
-							
-						}
-						else {
-							float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getSickLeave();
-							System.out.println("sick"+lop);
-							leaveTrack.setSickLeave(lop);
-							historyDetails.setLopdays(lop);
-							leaveTrackRepository.save(leaveTrack);
-							}
-					}
-						
-					
-					else {
-						float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getSickLeave();
-							historyDetails.setLopdays(lop);
-							leaveTrackRepository.save(leaveTrack);
-						}
-				 }
-//				
-				 if(historyDetails.getLeaveType().equalsIgnoreCase("bereavement")) {
-						if(leaveTrackRepo.get().getBereavementLeave()!= 0.0f && leaveTrackRepo.get().getBereavementLeave() > 0) {
-							if(historyDetails.getNoofdays()<=leaveTrackRepo.get().getBereavementLeave()) {
-								float num=historyDetails.getNoofdays();
-								float sick= leaveTrackRepo.get().getBereavementLeave()-historyDetails.getNoofdays() ;
-								if(sick < 0.5) {
-									leaveTrack.setBereavementLeave(0.0f);
-									historyDetails.setLopdays(num);
-									leaveTrackRepository.save(leaveTrack);
-								
-								}else {
-									leaveTrack.setBereavementLeave(sick);
-									System.out.println(sick);
-									leaveTrackRepository.save(leaveTrack);
-								}
-								
-							}
-							else {
-								float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getBereavementLeave();
-								System.out.println("sick"+lop);
-								leaveTrack.setBereavementLeave(lop);
-								historyDetails.setLopdays(lop);
-								leaveTrackRepository.save(leaveTrack);
-								}
-						}
-							
-						
-						else {
-							float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getBereavementLeave();
-								historyDetails.setLopdays(lop);
-								leaveTrackRepository.save(leaveTrack);
-							}
-					 }
-				 if(historyDetails.getLeaveType().equalsIgnoreCase("privilege")) {
-						if(leaveTrackRepo.get().getPrivilegeLeave()!= 0.0f && leaveTrackRepo.get().getPrivilegeLeave() > 0) {
-							if(historyDetails.getNoofdays()<=leaveTrackRepo.get().getPrivilegeLeave()) {
-								float num=historyDetails.getNoofdays();
-								float sick= leaveTrackRepo.get().getPrivilegeLeave()-historyDetails.getNoofdays() ;
-								if(sick < 0.5) {
-									leaveTrack.setPrivilegeLeave(0.0f);
-									historyDetails.setLopdays(num);
-									leaveTrackRepository.save(leaveTrack);
-								
-								}else {
-									leaveTrack.setPrivilegeLeave(sick);
-									leaveTrackRepository.save(leaveTrack);
-								}
-								
-							}
-							else {
-								float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getPrivilegeLeave();
-								System.out.println("sick"+lop);
-								leaveTrack.setPrivilegeLeave(lop);
-								historyDetails.setLopdays(lop);
-								leaveTrackRepository.save(leaveTrack);
-								}
-						}
-							
-						
-						else {
-							float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getPrivilegeLeave();
-								historyDetails.setLopdays(lop);
-								leaveTrackRepository.save(leaveTrack);
-							}
-					 }
-				 
-				 if(historyDetails.getLeaveType().equalsIgnoreCase("maternity") && 
-						 (registerDetailsRepo.get().getGender().equalsIgnoreCase("female") && 
-								 registerDetailsRepo.get().getMaritalstatus().equalsIgnoreCase("married"))) {	
-						if(leaveTrackRepo.get().getMaternityLeave()!=0.0f  && leaveTrackRepo.get().getMaternityLeave() > 0) {
-							if(historyDetails.getNoofdays()<=leaveTrackRepo.get().getMaternityLeave()) {
-								float num=historyDetails.getNoofdays();
-								float sick= leaveTrackRepo.get().getMaternityLeave()-historyDetails.getNoofdays() ;
-								if(sick < 0.5) {
-									leaveTrack.setMaternityLeave(0.0f);
-									historyDetails.setLopdays(num);
-									leaveTrackRepository.save(leaveTrack);
-								
-								}else {
-									leaveTrack.setMaternityLeave(sick);
-									leaveTrackRepository.save(leaveTrack);
-								}
-								
-							}
-							else {
-								float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getMaternityLeave();
-								System.out.println("sick"+lop);
-								leaveTrack.setMaternityLeave(lop);
-								historyDetails.setLopdays(lop);
-								leaveTrackRepository.save(leaveTrack);
-								}
-						}
-							
-						
-						else {
-							float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getMaternityLeave();
-								historyDetails.setLopdays(lop);
-								leaveTrackRepository.save(leaveTrack);
-							}
-					 }
-				
-				System.out.println("gadfjsyjaszyfdtsakgfudsgkufsdkugfkuaeywgsfkyagsz");
-				
-				historyDetails.setMaternityLeave(leaveTrackRepo.get().getMaternityLeave());
-				historyDetails.setPrivilegeLeave(leaveTrackRepo.get().getPrivilegeLeave());
-				historyDetails.setBereavementLeave(leaveTrackRepo.get().getBereavementLeave());
-				historyDetails.setSickLeave(leaveTrackRepo.get().getSickLeave());
-				historyDetails.setCasualLeave(leaveTrackRepo.get().getCasualLeave());
-				historyDetails.setStatus(status);
-				if(historyDetails.getDesignation()!="Manager") {
-					historyDetails.setApprovedBy(historyDetails.getManagername());
-				}
-				else {
-					historyDetails.setApprovedBy(historyDetails.getName());
-				}
-				
-			
-				historyDetails.setApproveddate(LocalDateTime.now());
-//				historyRepo.setCasualLeave(leaveTrack.getCasualLeave());
-         		historyRepository.save(historyDetails);
-         		
+
+			 calculation(historyId,empid,status);
 			}
 //			historyRepository.save(historyDetails)
-		if(status.equalsIgnoreCase("Approved")) {
-			History historyDetails = historyRepo.get();
+//		if(status.equalsIgnoreCase("Approved")) {
+//			History historyDetails = historyRepo.get();
 			
 //			sendEmailForLeaveApply(historyDetails.getManageremail(),"sangeetha@capeindia.net","subject: My leave request's response\\r\\n"
 //			
@@ -609,7 +275,7 @@ public class HistoryServiceImpl implements HistoryService {
 //			                +"Leave Management System.\\r\\n"
 //			               
 //			);	
-		}
+//		}
 			
 		}
 	
@@ -715,45 +381,125 @@ public class HistoryServiceImpl implements HistoryService {
 		return leaveTrackRepository.findByEmpid(empid);
 	}
 	@Override
-	public void revertcalculation(Integer historyId, String status,String empid) {
+	public void revertcalculation(Integer historyId,String status,String empid ) {
+		
 		Optional<History> historyRepo = historyRepository.findById(historyId);
 		History historyDetails = historyRepo.get();
 		Optional<LeaveTrack> leaveTrackRepo = leaveTrackRepository.findByEmpid(empid);
 		LeaveTrack leaveTrack= new LeaveTrack();
-		if(historyRepo.get().getStatus()=="cancelled") {
-			if(historyRepo.get().getLeaveType().equalsIgnoreCase("casual")) {
-				historyDetails.setLopdays(0.0f);
-			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();
-				leaveTrack.setCarryForwardLeave(leaveTrack.getCarryForwardLeave()+setcarryforward);
-				historyDetails.setCasualLeave(historyDetails.getCasualLeave()+setcarryforward);
-			}
+		
+		System.out.println(status);
+
+		if(status.equalsIgnoreCase("cancelled")) {
+			System.out.println("status is cancelled");
+			if(historyRepo.get().getLeaveType().equalsIgnoreCase("casual") &&leaveTrackRepo.isPresent()) {
+				
+			
+			if(historyRepo.get().getLopdays()>0) {
+				  float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();
+				    System.out.println(setcarryforward);
+					float carry=leaveTrackRepo.get().getCarryForwardLeave()+setcarryforward;
+					leaveTrackRepo.get().setCarryForwardLeave(carry);
+					System.out.println(carry);
+					historyDetails.setCasualLeave(historyDetails.getCasualLeave()+carry);
+					historyDetails.setLopdays(0.0f);
+					leaveTrackRepository.save(leaveTrackRepo.get());
+					historyRepository.save(historyDetails);
+			}else {
+				
+						historyDetails.setLopdays(0.0f);
+				historyDetails.setCasualLeave(historyDetails.getCasualLeave()+historyRepo.get().getNoofdays());
+				leaveTrackRepo.get().setCasualLeave(historyRepo.get().getCasualLeave());
+				leaveTrackRepo.get().setCarryForwardLeave(historyRepo.get().getNoofdays()+leaveTrackRepo.get().getCarryForwardLeave());
+				historyDetails.setNoofdays(0.0f);
+				leaveTrackRepository.save(leaveTrackRepo.get());
+				historyRepository.save(historyDetails);
+			
+			 }	
+			}	
 			if(historyRepo.get().getLeaveType().equalsIgnoreCase("sick")) {
-				historyDetails.setLopdays(0.0f);
-			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();
+				System.out.println("sick is trigerred");
+				if(historyRepo.get().getLopdays()>0) {
+					System.out.println("condition satisfied");
+					   System.out.println(historyRepo.get().getLopdays());
+			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();		
 				historyDetails.setSickLeave(historyDetails.getSickLeave()+setcarryforward);
+				historyDetails.setLopdays(0.0f);
+				historyRepository.save(historyDetails);
+				leaveTrackRepo.get().setSickLeave(historyRepo.get().getSickLeave());
+				leaveTrackRepository.save(leaveTrackRepo.get());
+			}else {
+				System.out.println("condition satisfied");
+				historyDetails.setSickLeave(historyDetails.getSickLeave()+historyRepo.get().getNoofdays());
+				historyRepository.save(historyDetails);
+				leaveTrackRepo.get().setSickLeave(historyRepo.get().getSickLeave());
+				leaveTrackRepository.save(leaveTrackRepo.get());
+			}
 			}
 			if(historyRepo.get().getLeaveType().equalsIgnoreCase("bereavement")) {
+				System.out.println("sick is trigerred");
+				if(historyRepo.get().getLopdays()>0) {
+					System.out.println("condition satisfied");
+					   System.out.println(historyRepo.get().getLopdays());
+			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();		
+			    historyDetails.setBereavementLeave(historyDetails.getBereavementLeave()+setcarryforward);
 				historyDetails.setLopdays(0.0f);
-			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();
-				historyDetails.setBereavementLeave(historyDetails.getBereavementLeave()+setcarryforward);
+				historyRepository.save(historyDetails);
+				leaveTrackRepo.get().setBereavementLeave(historyRepo.get().getBereavementLeave());
+				leaveTrackRepository.save(leaveTrackRepo.get());
+			}else {
+				System.out.println("condition satisfied");
+				historyDetails.setBereavementLeave(historyDetails.getBereavementLeave()+historyRepo.get().getNoofdays());
+				historyRepository.save(historyDetails);
+				leaveTrackRepo.get().setBereavementLeave(historyRepo.get().getBereavementLeave());
+				leaveTrackRepository.save(leaveTrackRepo.get());
+			}
 			}
 			if(historyRepo.get().getLeaveType().equalsIgnoreCase("privilege")) {
+				System.out.println("sick is trigerred");
+				if(historyRepo.get().getLopdays()>0) {
+					System.out.println("condition satisfied");
+					   System.out.println(historyRepo.get().getLopdays());
+			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();		
+			    historyDetails.setPrivilegeLeave(historyDetails.getPrivilegeLeave()+setcarryforward);
 				historyDetails.setLopdays(0.0f);
-			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();
-				historyDetails.setPrivilegeLeave(historyDetails.getPrivilegeLeave()+setcarryforward);
+				historyRepository.save(historyDetails);
+				leaveTrackRepo.get().setPrivilegeLeave(historyRepo.get().getPrivilegeLeave());
+				leaveTrackRepository.save(leaveTrackRepo.get());
+			}else {
+				System.out.println("condition satisfied");
+				historyDetails.setPrivilegeLeave(historyDetails.getPrivilegeLeave()+historyRepo.get().getNoofdays());
+				historyRepository.save(historyDetails);
+				leaveTrackRepo.get().setPrivilegeLeave(historyRepo.get().getPrivilegeLeave());
+				leaveTrackRepository.save(leaveTrackRepo.get());
+			}
+			
 			}
 			if(historyRepo.get().getLeaveType().equalsIgnoreCase("maternity")) {
+				System.out.println("sick is trigerred");
+				if(historyRepo.get().getLopdays()>0) {
+					System.out.println("condition satisfied");
+					   System.out.println(historyRepo.get().getLopdays());
+					   float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();	
+					   historyDetails.setMaternityLeave(historyDetails.getMaternityLeave()+setcarryforward);
 				historyDetails.setLopdays(0.0f);
-			    float setcarryforward = historyRepo.get().getNoofdays()-historyRepo.get().getLopdays();
-				historyDetails.setMaternityLeave(historyDetails.getMaternityLeave()+setcarryforward);
+				historyRepository.save(historyDetails);
+				leaveTrackRepo.get().setMaternityLeave(historyRepo.get().getMaternityLeave());
+				leaveTrackRepository.save(leaveTrackRepo.get());
+			}else {
+				System.out.println("condition satisfied");
+				historyDetails.setMaternityLeave(historyDetails.getMaternityLeave()+historyRepo.get().getNoofdays());
+				historyRepository.save(historyDetails);
+				leaveTrackRepo.get().setMaternityLeave(historyRepo.get().getMaternityLeave());
+				leaveTrackRepository.save(leaveTrackRepo.get());
+			}
 			}
 			
 		}
-		
+		historyDetails.setStatus(status);
+		historyRepository.save(historyDetails);
 	}
-
-
-
+	
 
 	@Override
 	public void updateFileHistory(Integer historyId, Integer fileId) {
@@ -761,7 +507,6 @@ public class HistoryServiceImpl implements HistoryService {
 		Optional<History> historyRepo = historyRepository.findById(historyId);
 		History historyDetails = historyRepo.get();
 		if(historyRepo.isPresent()) {
-		System.out.println("ihugyftrfghkjl;ljhghffgkjlkjhgckjhg");
 			historyDetails.setFileid(fileId);
 			historyRepository.save(historyDetails);
 		}
@@ -769,18 +514,13 @@ public class HistoryServiceImpl implements HistoryService {
 		
 	}
 
-
-
-
 	@Override
 	public Optional<History> getHistoryFile(Integer historyId) {
 		// TODO Auto-generated method stub
 		return historyRepository.findById(historyId);
 	}
 	
-
-
-
+	
 	@SuppressWarnings("resource")
 	@Override
 	public void downloadHistory(List<History> history ) throws Exception {
@@ -915,9 +655,247 @@ public class HistoryServiceImpl implements HistoryService {
 	public void delete(List<History> listOfHistory) {
 		historyRepository.deleteAll(listOfHistory);
 	}
+public void calculation(Integer historyId,String empid, String status) {
+	Optional<RegisterDetails> registerDetailsRepo = registerDetailsRepository.findByEmpid(empid);
+	Optional<History> historyRepo = historyRepository.findById(historyId);
+	String Empid=historyRepo.get().getEmpid();
+	Optional<LeaveTrack> leaveTrackRepo = leaveTrackRepository.findByEmpid(Empid);
+	Optional<LeaveDetails> leaveDetailsRepo = leaveDetailsRepository.findByExperience(registerDetailsRepo.get().getTotalexperience());
 	
-}
+History historyDetails = historyRepo.get();
+LeaveTrack leaveTrack = leaveTrackRepo.get();
+
+	if(historyDetails.getLeaveType().equalsIgnoreCase("casual") && status.equalsIgnoreCase("Approved")) {
+		if(leaveTrackRepo.get().getCarryForwardLeave()!=0.0f && leaveTrackRepo.get().getCarryForwardLeave()>0) {
+			if(historyDetails.getNoofdays()<=(leaveTrackRepo.get().getCarryForwardLeave())) {
+				System.out.println("segment 1");
+				float carry=leaveTrackRepo.get().getCarryForwardLeave()-historyDetails.getNoofdays();//1
+				float casual=leaveTrackRepo.get().getCasualLeave()-historyDetails.getNoofdays();	
+				System.out.println(casual);
+				historyDetails.setCasualLeave(casual);
+				historyDetails.setLopdays(0.0f);
+				historyRepository.save(historyDetails);
+				leaveTrack.setCasualLeave(casual);
+				leaveTrack.setCarryForwardLeave(carry);
+				leaveTrackRepository.save(leaveTrack);
+
+			}
+			else {
+				System.out.println("segment 2");
+				float casualForless=leaveTrackRepo.get().getCasualLeave()-leaveTrackRepo.get().getCarryForwardLeave();
+				float lop=historyDetails.getNoofdays()-leaveTrackRepo.get().getCarryForwardLeave();
+				leaveTrack.setCasualLeave(casualForless);
+				System.out.println("find your casual" +casualForless+" find your leavetrack casual"+leaveTrackRepo.get().getCasualLeave()+"find your carryforward"+leaveTrackRepo.get().getCarryForwardLeave());
+				leaveTrack.setCarryForwardLeave(0.0f);
+				leaveTrackRepository.save(leaveTrack);
+				historyDetails.setLopdays(lop);
+			}leaveTrackRepository.save(leaveTrack);
+			}
 	
+	else {
+		float casualForless=leaveTrackRepo.get().getCasualLeave()-leaveTrackRepo.get().getCarryForwardLeave();
+		leaveTrack.setCasualLeave(casualForless);
+		float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getCarryForwardLeave();
+		historyDetails.setLopdays(lop);
+		leaveTrackRepository.save(leaveTrack);
+	}
+		}
+	 if(historyDetails.getLeaveType().equalsIgnoreCase("sick") && status.equalsIgnoreCase("Approved")) {
+			if(leaveTrackRepo.get().getSickLeave()!= 0.0f && leaveTrackRepo.get().getSickLeave() > 0) {
+				if(historyDetails.getNoofdays()==leaveTrackRepo.get().getSickLeave()) {
+					 System.out.println("it is equal");
+						leaveTrack.setSickLeave(0.0f);
+						historyDetails.setLopdays(0.0f);
+						historyRepository.save(historyDetails);
+						leaveTrackRepository.save(leaveTrack);
+					}
+				 else if(historyDetails.getNoofdays()<leaveTrackRepo.get().getSickLeave()) {
+					float num=historyDetails.getNoofdays();
+					float sick= leaveTrackRepo.get().getSickLeave()-historyDetails.getNoofdays() ;
+					if(sick < 0.5) {
+						leaveTrack.setSickLeave(0.0f);
+						historyDetails.setLopdays(num);
+						leaveTrackRepository.save(leaveTrack);
+						historyRepository.save(historyDetails);
+					}else {
+						leaveTrack.setSickLeave(sick);
+						historyDetails.setLopdays(0.0f);
+						historyRepository.save(historyDetails);
+						leaveTrackRepository.save(leaveTrack);
+					}
+					
+				}
+				else {
+					float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getSickLeave();
+					leaveTrack.setSickLeave(0.0f);
+					historyDetails.setLopdays(lop);
+					leaveTrackRepository.save(leaveTrack);
+					}
+			}
+				
+			
+			else {
+				float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getSickLeave();
+					historyDetails.setLopdays(lop);
+					leaveTrackRepository.save(leaveTrack);
+				}
+		 }
+//		
+	 if(historyDetails.getLeaveType().equalsIgnoreCase("bereavement") && status.equalsIgnoreCase("Approved")) {
+		 
+			if(leaveTrackRepo.get().getBereavementLeave()!= 0.0f && leaveTrackRepo.get().getBereavementLeave() > 0) {
+				 System.out.println(leaveTrackRepo.get().getBereavementLeave());
+				 System.out.println(historyDetails.getNoofdays());
+				 if(historyDetails.getNoofdays()==leaveTrackRepo.get().getBereavementLeave()) {
+					 System.out.println("it is equal");
+						leaveTrack.setBereavementLeave(0.0f);
+						historyDetails.setLopdays(0.0f);
+						historyRepository.save(historyDetails);
+						leaveTrackRepository.save(leaveTrack);
+					}
+				 else if(historyDetails.getNoofdays()<leaveTrackRepo.get().getBereavementLeave()) {
+					float num=historyDetails.getNoofdays();
+					float sick= leaveTrackRepo.get().getBereavementLeave()-historyDetails.getNoofdays();
+				     if(sick < 0.5) {
+						leaveTrack.setBereavementLeave(0.0f);
+						historyDetails.setLopdays(num);
+						leaveTrackRepository.save(leaveTrack);
+					}
+					else {
+					
+						leaveTrack.setBereavementLeave(sick);
+						historyDetails.setLopdays(0.0f);
+						historyRepository.save(historyDetails);
+						leaveTrackRepository.save(leaveTrack);
+					}
+				}
+				else {
+					float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getBereavementLeave();
+					leaveTrack.setBereavementLeave(lop);
+					historyDetails.setLopdays(lop);
+					leaveTrackRepository.save(leaveTrack);
+					}
+			}
+				
+			
+			else {
+				float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getBereavementLeave();
+					historyDetails.setLopdays(lop);
+					leaveTrackRepository.save(leaveTrack);
+				}
+		 }
+		 if(historyDetails.getLeaveType().equalsIgnoreCase("privilege") && status.equalsIgnoreCase("Approved")) {
+				if(leaveTrackRepo.get().getPrivilegeLeave()!= 0.0f && leaveTrackRepo.get().getPrivilegeLeave() > 0) {
+					if(historyDetails.getNoofdays()==leaveTrackRepo.get().getPrivilegeLeave()) {
+						 System.out.println("it is equal");
+							leaveTrack.setPrivilegeLeave(0.0f);
+							historyDetails.setLopdays(0.0f);
+							historyRepository.save(historyDetails);
+							leaveTrackRepository.save(leaveTrack);
+						}
+					 else if(historyDetails.getNoofdays()<leaveTrackRepo.get().getPrivilegeLeave()) {
+						float num=historyDetails.getNoofdays();
+						float sick= leaveTrackRepo.get().getPrivilegeLeave()-historyDetails.getNoofdays() ;
+						if(sick < 0.5) {
+							leaveTrack.setPrivilegeLeave(0.0f);
+							historyDetails.setLopdays(num);
+							historyRepository.save(historyDetails);
+							leaveTrackRepository.save(leaveTrack);
+						
+						}else {
+							leaveTrack.setPrivilegeLeave(sick);
+							historyDetails.setLopdays(0.0f);historyRepository.save(historyDetails);
+							leaveTrackRepository.save(leaveTrack);
+						}
+						
+					}
+					else {
+						float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getPrivilegeLeave();
+						leaveTrack.setPrivilegeLeave(0.0f);
+						historyDetails.setLopdays(lop);
+						leaveTrackRepository.save(leaveTrack);
+						}
+				}
+					
+				
+				else {
+					float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getPrivilegeLeave();
+						historyDetails.setLopdays(lop);
+						leaveTrackRepository.save(leaveTrack);
+					}
+			 }
+		 
+		 if(historyDetails.getLeaveType().equalsIgnoreCase("maternity") && 
+				 (registerDetailsRepo.get().getGender().equalsIgnoreCase("female") && 
+						 registerDetailsRepo.get().getMaritalstatus().equalsIgnoreCase("married")
+						 && status.equalsIgnoreCase("Approved"))) {	
+				if(leaveTrackRepo.get().getMaternityLeave()!=0.0f  && leaveTrackRepo.get().getMaternityLeave() > 0) {
+					if(historyDetails.getNoofdays()==leaveTrackRepo.get().getMaternityLeave()) {
+						 System.out.println("it is equal");
+							leaveTrack.setMaternityLeave(0.0f);
+							historyDetails.setLopdays(0.0f);
+							historyRepository.save(historyDetails);
+							leaveTrackRepository.save(leaveTrack);
+						}
+					 else
+					if(historyDetails.getNoofdays()<leaveTrackRepo.get().getMaternityLeave()) {
+						float num=historyDetails.getNoofdays();
+						float sick= leaveTrackRepo.get().getMaternityLeave()-historyDetails.getNoofdays() ;
+						if(sick < 0.5) {
+							leaveTrack.setMaternityLeave(0.0f);
+							historyDetails.setLopdays(num);
+						historyRepository.save(historyDetails);
+							leaveTrackRepository.save(leaveTrack);
+						
+						}else {
+							leaveTrack.setMaternityLeave(sick);
+							historyDetails.setLopdays(0.0f);historyRepository.save(historyDetails);
+							leaveTrackRepository.save(leaveTrack);
+						}
+						
+					}
+					else {
+						float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getMaternityLeave();
+						leaveTrack.setMaternityLeave(lop);
+						historyDetails.setLopdays(lop);
+						leaveTrackRepository.save(leaveTrack);
+						}
+				}
+					
+				
+				else {
+					float lop= historyDetails.getNoofdays()-leaveTrackRepo.get().getMaternityLeave();
+						historyDetails.setLopdays(lop);
+						leaveTrackRepository.save(leaveTrack);
+					}
+			 }
 		
- 
+		historyDetails.setMaternityLeave(leaveTrackRepo.get().getMaternityLeave());
+		historyDetails.setPrivilegeLeave(leaveTrackRepo.get().getPrivilegeLeave());
+		historyDetails.setBereavementLeave(leaveTrackRepo.get().getBereavementLeave());
+		historyDetails.setSickLeave(leaveTrackRepo.get().getSickLeave());
+		historyDetails.setCasualLeave(leaveTrackRepo.get().getCasualLeave());
+		historyDetails.setStatus(status);
+		if(historyDetails.getDesignation()!="Manager") {
+			historyDetails.setApprovedBy(historyDetails.getManagername());
+		}
+		else {
+			historyDetails.setApprovedBy(historyDetails.getName());
+		}
+		
+	
+		historyDetails.setApproveddate(LocalDateTime.now());
+//		historyRepo.setCasualLeave(leaveTrack.getCasualLeave());
+ 		historyRepository.save(historyDetails);
+ 		
+	}
+}
+
+	
+
+
+
+
+
+
 

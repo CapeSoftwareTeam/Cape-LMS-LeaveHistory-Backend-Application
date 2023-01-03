@@ -13,7 +13,7 @@ import com.capeelectric.model.LeaveDetails;
 public interface LeaveDetailsRepository extends CrudRepository<LeaveDetails,Integer>{
 
 	Optional<LeaveDetails> findByExperience(Integer experience);
-	
-//	public List<LeaveDetails> findAll();
+
+	//	public List<LeaveDetails> findAll();
 
 }

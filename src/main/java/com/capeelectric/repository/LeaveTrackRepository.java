@@ -1,5 +1,6 @@
 package com.capeelectric.repository;
 
+import java.sql.Date;
 import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
@@ -13,7 +14,6 @@ public interface LeaveTrackRepository extends CrudRepository<LeaveTrack,Integer>
 
 	Optional<LeaveTrack> findByEmpid(String empid);
 	
-
-	
+	void deleteById(Integer id);
 
 }
