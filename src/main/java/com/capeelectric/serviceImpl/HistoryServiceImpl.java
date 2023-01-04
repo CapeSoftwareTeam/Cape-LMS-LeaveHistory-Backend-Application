@@ -520,8 +520,6 @@ public class HistoryServiceImpl implements HistoryService {
 		return historyRepository.findById(historyId);
 	}
 	
-	
-	@SuppressWarnings("resource")
 	@Override
 	public void downloadHistory(List<History> history ) throws Exception {
 
