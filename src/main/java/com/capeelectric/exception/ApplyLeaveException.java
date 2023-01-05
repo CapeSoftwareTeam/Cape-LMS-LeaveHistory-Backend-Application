@@ -1,6 +1,6 @@
 package com.capeelectric.exception;
 
-public class UpdatePasswordException extends Throwable{
+public class ApplyLeaveException extends Throwable{
 
 	/**
 	 * 
@@ -10,8 +10,8 @@ public class UpdatePasswordException extends Throwable{
 	private String message;
 
 	
-	public UpdatePasswordException() {}
-	public UpdatePasswordException(String message) {
+	public ApplyLeaveException() {}
+	public ApplyLeaveException(String message) {
 		super();
 		this.message = message;
 	}
@@ -27,6 +27,6 @@ public class UpdatePasswordException extends Throwable{
 	
 
 }
-
+ 
 
 

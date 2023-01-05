@@ -3,6 +3,7 @@ package com.capeelectric.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.capeelectric.exception.ApplyLeaveException;
 import com.capeelectric.model.History;
 import com.capeelectric.model.LeaveDetails;
 import com.capeelectric.model.LeaveTrack;
@@ -24,7 +25,7 @@ public interface HistoryService {
 
 	History postdetails(String empid);
 
-	public void updateApprove(Integer historyId,String empid, String status);
+	public void updateApprove(Integer historyId,String empid, String status)throws ApplyLeaveException, Exception;
 
 	public LeaveTrack getLeavedetails(String empid);
 	

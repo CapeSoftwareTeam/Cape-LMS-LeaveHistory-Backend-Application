@@ -2,6 +2,7 @@ package com.capeelectric.serviceImpl;
 
 
 import com.capeelectric.config.AWSConfig;
+import com.capeelectric.exception.ApplyLeaveException;
 import com.capeelectric.model.EmailContent;
 
 import org.springframework.core.ParameterizedTypeReference;
@@ -216,8 +217,8 @@ public class HistoryServiceImpl implements HistoryService {
 
 // here we get status approve and calculate and get the leave track details here
 	@Override
-	public void updateApprove(Integer historyId,String empid, String status ) {
-		
+	public void updateApprove(Integer historyId,String empid, String status ) throws ApplyLeaveException, Exception {
+		try {
 		Optional<RegisterDetails> registerDetailsRepo = registerDetailsRepository.findByEmpid(empid);
 		Optional<History> historyRepo = historyRepository.findById(historyId);
 		String Empid=historyRepo.get().getEmpid();
@@ -276,6 +277,22 @@ public class HistoryServiceImpl implements HistoryService {
 //			               
 //			);	
 //		}
+		}
+		catch(Exception e) {
+			Optional<History> historyRepo = historyRepository.findById(historyId);
+			String Empid=historyRepo.get().getEmpid();
+			Optional<LeaveTrack> leaveTrackRepo = leaveTrackRepository.findByEmpid(Empid);
+			if(historyRepo.isEmpty()) {
+				throw new Exception("Approved Failed Because History Not Present");
+			}
+			else if(leaveTrackRepo.isEmpty()) {
+				throw new Exception("Approved Failed Because Empid Not Login in LMS ");
+			}
+			else {
+				throw new Exception("Update failed..."+e.getMessage());
+			}
+		
+		}
 			
 		}
 	

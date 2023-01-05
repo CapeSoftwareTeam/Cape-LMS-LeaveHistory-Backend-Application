@@ -1,18 +1,14 @@
 package com.capeelectric.exception;
 
-public class UserException extends Throwable{
+public class UpdateHistoryException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
 	private String message;
 
-	public UserException() {
-		
+	public UpdateHistoryException() {
+
 	}
-	public UserException(String message) {
+	public UpdateHistoryException(String message) {
 		super();
 		this.message = message;
 	}
@@ -24,10 +20,4 @@ public class UserException extends Throwable{
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	
-
 }
- 
-
-

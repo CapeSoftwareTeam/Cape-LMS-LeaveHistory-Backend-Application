@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.capeelectric.exception.ApplyLeaveException;
 import com.capeelectric.model.History;
 import com.capeelectric.model.LeaveDetails;
 import com.capeelectric.model.LeaveTrack;
@@ -95,7 +96,7 @@ public class HistoryController {
 
 	@PutMapping("/hrapprove/{historyId}/{empid}/{status}")
 	public void updateHistoryDetails(@PathVariable Integer historyId, @PathVariable String empid,
-			@PathVariable String status) {
+			@PathVariable String status) throws ApplyLeaveException, Exception{
 		historyService.updateApprove(historyId, empid, status);
 
 		// return new ResponseEntity<void>("History details updated",HttpStatus.OK);
