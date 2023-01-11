@@ -42,8 +42,6 @@ public interface HistoryService {
 
 	public List<History> empStatusDetails(String empid);
 
-	public List<History> StatusDetails(String empid);
-
 	public List<History> getHistoryDetails();
 
 //	List<History> getHistoryDetails(String department);
